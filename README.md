@@ -76,6 +76,8 @@ npm run add-sample
 | `npm run add-sample` | Add sample product to local deployment |
 | `npm run add-sample:mumbai` | Add sample product to Mumbai testnet |
 | `npm run add-sample:polygon` | Add sample product to Polygon mainnet |
+| `npm run test-manual` | Run manual contract interaction tests |
+| `npm run test-manual:localhost` | Run manual tests on localhost network |
 | `npm run node` | Start local Hardhat node |
 | `npm run clean` | Clean build artifacts |
 
@@ -120,6 +122,8 @@ ETHERSCAN_API_KEY=your_etherscan_api_key_here
 
 ## 🧪 Testing
 
+### Automated Test Suite
+
 The project includes comprehensive tests covering:
 - ✅ Contract deployment
 - ✅ Product addition with validation
@@ -127,6 +131,204 @@ The project includes comprehensive tests covering:
 - ✅ Product verification
 - ✅ Access control (owner-only functions)
 - ✅ Error handling for invalid inputs
+
+### Manual Testing Guide
+
+Berikut adalah urutan lengkap untuk melakukan testing proyek Prototype-5:
+
+#### 1. **Environment Setup & Dependencies Check**
+```bash
+# Pastikan Node.js terinstall (v16+)
+node --version
+
+# Install dependencies
+npm install
+
+# Verifikasi semua dependencies terinstall
+npm list
+```
+
+#### 2. **Compilation Test**
+```bash
+# Compile smart contracts
+npm run compile
+
+# Expected output: "Compiled X Solidity files successfully"
+```
+
+#### 3. **Automated Test Suite**
+```bash
+# Jalankan semua test cases
+npm test
+
+# Expected: 13 tests passing
+# - Deployment tests (2 tests)
+# - Adding Products tests (4 tests) 
+# - Getting Products tests (4 tests)
+# - Product Verification tests (3 tests)
+```
+
+#### 4. **Local Deployment Test**
+```bash
+# Deploy ke local Hardhat network
+npm run deploy
+
+# Expected output:
+# - "Deploying BatikAuthenticity contract..."
+# - Contract address: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+# - "Contract info saved to contract-info.json"
+```
+
+#### 5. **Sample Product Addition Test**
+```bash
+# Tambahkan sample product
+npm run add-sample
+
+# Expected output:
+# - "Using contract at: [contract-address]"
+# - "Adding sample product..."
+# - "Product Name: Batik Parang Klasik"
+# - "Artisan: Sari Indah"
+# - "Product added successfully!"
+# - "Product verified successfully!"
+```
+
+#### 6. **Contract Interaction Verification**
+
+Jalankan test manual untuk verifikasi interaksi dengan smart contract:
+
+```bash
+# Jalankan test manual (pastikan sudah deploy dan add sample product)
+npm run test-manual
+
+# Atau dengan network localhost (recommended):
+npx hardhat run scripts/test-manual.js --network localhost
+
+# Expected output:
+# - Contract address and network info
+# - Total products count
+# - Product details (if products exist)
+# - Basic product info
+# - Verification status
+# - Error handling test
+# - Test summary with all checks passed
+```
+
+**Note**: Untuk testing yang lebih stabil, gunakan `--network localhost` setelah menjalankan `npm run node` di terminal terpisah.
+
+**Manual Test Features:**
+- ✅ Contract deployment verification
+- ✅ Product data retrieval
+- ✅ Basic info extraction
+- ✅ Verification status check
+- ✅ Error handling validation
+- ✅ Comprehensive test summary
+
+#### 7. **Network-Specific Testing**
+
+**Local Hardhat Node:**
+```bash
+# Terminal 1: Start local node
+npm run node
+
+# Terminal 2: Deploy to local node
+npx hardhat run scripts/deploy.js --network localhost
+
+# Terminal 2: Add sample product
+npx hardhat run scripts/addSampleProduct.js --network localhost
+```
+
+**Polygon Mumbai Testnet:**
+```bash
+# Setup .env file dengan private key dan RPC URL
+cp env.example .env
+# Edit .env dengan data yang benar
+
+# Deploy ke Mumbai testnet
+npm run deploy:mumbai
+
+# Add sample product ke Mumbai
+npm run add-sample:mumbai
+```
+
+#### 8. **Gas Usage Verification**
+```bash
+# Compile dengan gas reporter
+npx hardhat compile
+
+# Run tests dengan gas reporting
+REPORT_GAS=true npm test
+
+# Expected gas usage:
+# - addProduct(): ~471,192 gas
+# - verifyProduct(): ~49,990 gas
+# - Contract Deployment: ~2,125,698 gas
+```
+
+#### 9. **Error Handling Tests**
+
+Test error scenarios:
+
+```bash
+# Test 1: Try to add duplicate product ID
+npx hardhat run scripts/test-duplicate.js
+
+# Test 2: Try to get non-existent product
+npx hardhat run scripts/test-nonexistent.js
+
+# Test 3: Try unauthorized access
+npx hardhat run scripts/test-unauthorized.js
+```
+
+#### 10. **Cleanup Test**
+```bash
+# Clean build artifacts
+npm run clean
+
+# Verify cleanup
+ls artifacts/  # Should show no files
+
+# Recompile to ensure everything works after cleanup
+npm run compile
+```
+
+### 🎯 **Testing Checklist**
+
+- [ ] Dependencies installed correctly
+- [ ] Smart contracts compile successfully
+- [ ] All 13 automated tests pass
+- [ ] Local deployment works
+- [ ] Sample product addition works
+- [ ] Contract interaction functions work
+- [ ] Gas usage within expected ranges
+- [ ] Error handling works correctly
+- [ ] Network-specific deployment works
+- [ ] Cleanup and recompilation works
+
+### 🚨 **Troubleshooting Common Issues**
+
+**Issue**: "Stack too deep" compilation error
+**Solution**: viaIR: true already enabled in hardhat.config.js
+
+**Issue**: "Contract not found" error
+**Solution**: Run `npm run compile` first
+
+**Issue**: "Insufficient funds" on testnet
+**Solution**: Get testnet MATIC from [Mumbai Faucet](https://faucet.polygon.technology/)
+
+**Issue**: "Network not found" error
+**Solution**: Check network configuration in hardhat.config.js
+
+### 📊 **Expected Test Results**
+
+```
+✓ 13 passing (459ms)
+✓ Contract deployed successfully
+✓ Sample product added and verified
+✓ All functions working correctly
+✓ Gas usage optimized
+✓ Error handling functional
+```
 
 ## 🔐 Security Features
 

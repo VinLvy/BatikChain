@@ -12,6 +12,8 @@
     "add-sample": "npx hardhat run scripts/addSampleProduct.js",
     "add-sample:mumbai": "npx hardhat run scripts/addSampleProduct.js --network polygonMumbai",
     "add-sample:polygon": "npx hardhat run scripts/addSampleProduct.js --network polygon",
+    "test-manual": "npx hardhat run scripts/test-manual.js",
+    "test-manual:localhost": "npx hardhat run scripts/test-manual.js --network localhost",
     "node": "npx hardhat node",
     "clean": "npx hardhat clean"
   },

@@ -1,31 +1,45 @@
 {
-  "name": "prototype-5",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "compile": "npx hardhat compile",
-    "test": "npx hardhat test",
-    "deploy": "npx hardhat run scripts/deploy.js",
-    "deploy:mumbai": "npx hardhat run scripts/deploy.js --network polygonMumbai",
-    "deploy:polygon": "npx hardhat run scripts/deploy.js --network polygon",
-    "add-sample": "npx hardhat run scripts/addSampleProduct.js",
-    "add-sample:mumbai": "npx hardhat run scripts/addSampleProduct.js --network polygonMumbai",
-    "add-sample:polygon": "npx hardhat run scripts/addSampleProduct.js --network polygon",
-    "test-manual": "npx hardhat run scripts/test-manual.js",
-    "test-manual:localhost": "npx hardhat run scripts/test-manual.js --network localhost",
-    "node": "npx hardhat node",
-    "clean": "npx hardhat clean"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
-    "hardhat": "^2.26.3"
-  },
-  "dependencies": {
-    "@openzeppelin/contracts": "^4.9.6",
-    "dotenv": "^17.2.3"
-  }
+    "name": "batik-authenticity-monorepo",
+    "version": "1.0.0",
+    "description": "Platform verifikasi keaslian produk batik Indonesia menggunakan teknologi blockchain",
+    "private": true,
+    "workspaces": [
+        "hardhat",
+        "frontend"
+    ],
+    "scripts": {
+        "dev:frontend": "cd frontend && npm run dev",
+        "build:frontend": "cd frontend && npm run build",
+        "start:frontend": "cd frontend && npm start",
+        "compile": "cd hardhat && npm run compile",
+        "test": "cd hardhat && npm run test",
+        "deploy": "cd hardhat && npm run deploy",
+        "deploy:mumbai": "cd hardhat && npm run deploy:mumbai",
+        "deploy:polygon": "cd hardhat && npm run deploy:polygon",
+        "add-sample": "cd hardhat && npm run add-sample",
+        "add-sample:mumbai": "cd hardhat && npm run add-sample:mumbai",
+        "add-sample:polygon": "cd hardhat && npm run add-sample:polygon",
+        "install:all": "npm install && cd hardhat && npm install && cd ../frontend && npm install",
+        "clean": "cd hardhat && npm run clean",
+        "lint": "cd frontend && npm run lint",
+        "type-check": "cd frontend && npx tsc --noEmit"
+    },
+    "keywords": [
+        "batik",
+        "blockchain",
+        "authenticity",
+        "polygon",
+        "smart-contract",
+        "nextjs",
+        "ethereum"
+    ],
+    "author": "Prototype-5 Team",
+    "license": "MIT",
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    },
+    "engines": {
+        "node": ">=18.0.0",
+        "npm": ">=8.0.0"
+    }
 }

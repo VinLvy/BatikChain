@@ -1,382 +1,232 @@
-# Prototype-5: Batik Authenticity Blockchain System
+# Batik Authenticity Platform
 
-Prototype-5 adalah demonstrasi bukti konsep (Proof of Concept) yang berfokus pada inti desentralisasi untuk memverifikasi keaslian produk batik menggunakan blockchain technology.
+Platform verifikasi keaslian produk batik Indonesia menggunakan teknologi blockchain Polygon. Sistem ini memungkinkan pengrajin untuk mendaftarkan produk batik mereka dengan informasi lengkap dan transparan, sementara konsumen dapat memverifikasi keaslian produk melalui blockchain.
 
-## 🎯 Tujuan
+## 🏗️ Struktur Monorepo
 
-Membuktikan bahwa data otentik produk batik (seperti pengrajin, lokasi, dan teknik pembuatan) dapat disimpan secara permanen dan transparan di blockchain dan dapat diakses oleh konsumen secara real-time.
-
-## 🏗️ Arsitektur
-
-### Smart Contract Features
-- **Product Struct**: Menyimpan data lengkap produk batik termasuk:
-  - ID unik produk
-  - Nama produk dan pengrajin
-  - Alamat dan lokasi geografis (desa, kecamatan, kabupaten, provinsi)
-  - Koordinat GPS
-  - Teknik pembuatan dan bahan yang digunakan
-  - Hash untuk foto, video, dan dokumentasi
-  - Status verifikasi dan timestamp
-
-### Core Functions
-- `addProduct()`: Menambahkan produk batik baru ke blockchain
-- `getProduct(id)`: Mengambil data produk berdasarkan ID
-- `verifyProduct(id)`: Memverifikasi produk (hanya owner)
-- `isProductVerified(id)`: Memeriksa status verifikasi
-- `getTotalProducts()`: Mendapatkan jumlah total produk
+```
+├── hardhat/           # Smart contract development
+│   ├── contracts/     # Solidity contracts
+│   ├── scripts/       # Deployment scripts
+│   ├── test/          # Contract tests
+│   └── ...
+├── frontend/          # Next.js web application
+│   ├── src/          # Source code
+│   ├── components/   # React components
+│   ├── hooks/        # Custom hooks
+│   └── ...
+└── README.md         # This file
+```
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js (v16 atau lebih baru)
-- npm atau yarn
+
+- Node.js 18+ 
+- npm 8+
+- MetaMask wallet
+- Polygon Mumbai testnet MATIC tokens
 
 ### Installation
 
-1. **Clone repository**
+1. Clone repository:
 ```bash
 git clone <repository-url>
-cd prototype-5
+cd batik-authenticity-monorepo
 ```
 
-2. **Install dependencies**
+2. Install dependencies untuk semua workspace:
 ```bash
-npm install
+npm run install:all
 ```
 
-3. **Compile smart contracts**
+3. Setup environment variables:
 ```bash
-npm run compile
+# Copy hardhat environment
+cp hardhat/env.example hardhat/.env
+
+# Copy frontend environment  
+cp frontend/.env.example frontend/.env.local
 ```
 
-4. **Run tests**
+4. Deploy smart contract:
 ```bash
-npm test
+npm run deploy:mumbai
 ```
 
-5. **Deploy locally (Hardhat Network)**
+5. Update contract address di `frontend/.env.local` dengan address yang didapat dari deployment.
+
+6. Start development server:
 ```bash
-npm run deploy
+npm run dev:frontend
 ```
 
-6. **Add sample product**
+## 📁 Workspace Details
+
+### Hardhat (`./hardhat/`)
+
+Smart contract development environment untuk BatikAuthenticity.sol.
+
+**Key Features:**
+- ✅ Product registration dengan data lengkap
+- ✅ Verification system untuk keaslian produk
+- ✅ Query functions untuk frontend integration
+- ✅ OpenZeppelin security standards
+- ✅ ReentrancyGuard protection
+
+**Commands:**
 ```bash
-npm run add-sample
+cd hardhat
+npm run compile     # Compile contracts
+npm run test        # Run tests
+npm run deploy:mumbai  # Deploy to Mumbai testnet
+npm run add-sample:mumbai  # Add sample product
 ```
 
-## 📋 Available Scripts
+### Frontend (`./frontend/`)
 
-| Command | Description |
-|---------|-------------|
-| `npm run compile` | Compile smart contracts |
-| `npm test` | Run test suite |
-| `npm run deploy` | Deploy to local Hardhat network |
-| `npm run deploy:mumbai` | Deploy to Polygon Mumbai testnet |
-| `npm run deploy:polygon` | Deploy to Polygon mainnet |
-| `npm run add-sample` | Add sample product to local deployment |
-| `npm run add-sample:mumbai` | Add sample product to Mumbai testnet |
-| `npm run add-sample:polygon` | Add sample product to Polygon mainnet |
-| `npm run test-manual` | Run manual contract interaction tests |
-| `npm run test-manual:localhost` | Run manual tests on localhost network |
-| `npm run node` | Start local Hardhat node |
-| `npm run clean` | Clean build artifacts |
+Next.js web application untuk interaksi dengan smart contract.
+
+**Key Features:**
+- 🔗 MetaMask wallet integration
+- 📱 Responsive design dengan Tailwind CSS
+- 🔍 Search dan filter produk
+- 📋 Product detail view
+- ✅ Verification status display
+- 🌐 Polygon Mumbai network support
+
+**Commands:**
+```bash
+cd frontend
+npm run dev      # Development server
+npm run build    # Production build
+npm run start    # Production server
+npm run lint     # ESLint check
+```
+
+## 🔧 Configuration
+
+### Smart Contract
+
+Update `hardhat/.env` dengan:
+```
+PRIVATE_KEY=your_private_key
+POLYGON_MUMBAI_URL=https://rpc-mumbai.maticvigil.com
+POLYGON_MUMBAI_API_KEY=your_api_key
+```
+
+### Frontend
+
+Update `frontend/.env.local` dengan:
+```
+NEXT_PUBLIC_CONTRACT_ADDRESS=0x... # Contract address from deployment
+```
+
+## 📋 Smart Contract Functions
+
+### Read Functions (Public)
+- `getProduct(uint256 id)` - Get complete product data
+- `getProductBasicInfo(uint256 id)` - Get basic product info
+- `getTotalProducts()` - Get total number of products
+- `getProductIdByIndex(uint256 index)` - Get product ID by index
+- `isProductVerified(uint256 id)` - Check verification status
+
+### Write Functions (Owner Only)
+- `addProduct(...)` - Add new product
+- `verifyProduct(uint256 id)` - Verify product authenticity
+
+## 🎯 Product Data Structure
+
+```solidity
+struct Product {
+    uint256 id;                 // Unique product ID
+    string productName;         // Product name
+    string artisanName;         // Artisan name
+    string artisanAddress;      // Artisan address
+    string village;            // Village name
+    string district;           // District name
+    string regency;            // Regency name
+    string province;           // Province name
+    string coordinates;        // GPS coordinates
+    string technique;          // Batik technique
+    string materials;          // Materials used
+    string description;        // Product description
+    string imageHash;          // Product image hash
+    string artisanImageHash;   // Artisan image hash
+    string videoHash;          // Process video hash
+    uint256 mintDate;          // Minting timestamp
+    bool isVerified;           // Verification status
+    address verifiedBy;        // Verifier address
+}
+```
 
 ## 🌐 Network Configuration
 
 ### Polygon Mumbai Testnet
-- RPC URL: `https://rpc-mumbai.maticvigil.com`
-- Chain ID: 80001
-- Testnet MATIC: [Mumbai Faucet](https://faucet.polygon.technology/)
-
-### Polygon Mainnet
-- RPC URL: `https://polygon-rpc.com`
-- Chain ID: 137
-
-## 🔧 Environment Setup
-
-1. **Copy environment file**
-```bash
-cp env.example .env
-```
-
-2. **Configure your environment variables**
-```env
-# Private key for deploying contracts (NEVER commit this to version control)
-PRIVATE_KEY=your_private_key_here
-
-# RPC URLs for different networks
-POLYGON_MUMBAI_RPC_URL=https://rpc-mumbai.maticvigil.com
-POLYGON_RPC_URL=https://polygon-rpc.com
-
-# Optional: Etherscan API key for contract verification
-ETHERSCAN_API_KEY=your_etherscan_api_key_here
-```
-
-## 📊 Gas Usage
-
-| Function | Average Gas Cost |
-|----------|------------------|
-| `addProduct()` | ~471,192 gas |
-| `verifyProduct()` | ~49,990 gas |
-| Contract Deployment | ~2,125,698 gas |
+- **Chain ID:** 80001
+- **RPC URL:** https://rpc-mumbai.maticvigil.com
+- **Block Explorer:** https://mumbai.polygonscan.com
+- **Currency:** MATIC
 
 ## 🧪 Testing
 
-### Automated Test Suite
-
-The project includes comprehensive tests covering:
-- ✅ Contract deployment
-- ✅ Product addition with validation
-- ✅ Product retrieval
-- ✅ Product verification
-- ✅ Access control (owner-only functions)
-- ✅ Error handling for invalid inputs
-
-### Manual Testing Guide
-
-Berikut adalah urutan lengkap untuk melakukan testing proyek Prototype-5:
-
-#### 1. **Environment Setup & Dependencies Check**
+### Smart Contract Tests
 ```bash
-# Pastikan Node.js terinstall (v16+)
-node --version
-
-# Install dependencies
-npm install
-
-# Verifikasi semua dependencies terinstall
-npm list
+cd hardhat
+npm run test
 ```
 
-#### 2. **Compilation Test**
+### Frontend Type Checking
 ```bash
-# Compile smart contracts
-npm run compile
-
-# Expected output: "Compiled X Solidity files successfully"
+npm run type-check
 ```
 
-#### 3. **Automated Test Suite**
+### Frontend Linting
 ```bash
-# Jalankan semua test cases
-npm test
-
-# Expected: 13 tests passing
-# - Deployment tests (2 tests)
-# - Adding Products tests (4 tests) 
-# - Getting Products tests (4 tests)
-# - Product Verification tests (3 tests)
+npm run lint
 ```
 
-#### 4. **Local Deployment Test**
+## 🚀 Deployment
+
+### Smart Contract
 ```bash
-# Deploy ke local Hardhat network
-npm run deploy
-
-# Expected output:
-# - "Deploying BatikAuthenticity contract..."
-# - Contract address: 0x5FbDB2315678afecb367f032d93F642f64180aa3
-# - "Contract info saved to contract-info.json"
+npm run deploy:mumbai    # Mumbai testnet
+npm run deploy:polygon   # Polygon mainnet
 ```
 
-#### 5. **Sample Product Addition Test**
+### Frontend
 ```bash
-# Tambahkan sample product
-npm run add-sample
-
-# Expected output:
-# - "Using contract at: [contract-address]"
-# - "Adding sample product..."
-# - "Product Name: Batik Parang Klasik"
-# - "Artisan: Sari Indah"
-# - "Product added successfully!"
-# - "Product verified successfully!"
+npm run build:frontend
+# Deploy dist/ folder to your hosting platform
 ```
 
-#### 6. **Contract Interaction Verification**
+## 📚 Documentation
 
-Jalankan test manual untuk verifikasi interaksi dengan smart contract:
-
-```bash
-# Jalankan test manual (pastikan sudah deploy dan add sample product)
-npm run test-manual
-
-# Atau dengan network localhost (recommended):
-npx hardhat run scripts/test-manual.js --network localhost
-
-# Expected output:
-# - Contract address and network info
-# - Total products count
-# - Product details (if products exist)
-# - Basic product info
-# - Verification status
-# - Error handling test
-# - Test summary with all checks passed
-```
-
-**Note**: Untuk testing yang lebih stabil, gunakan `--network localhost` setelah menjalankan `npm run node` di terminal terpisah.
-
-**Manual Test Features:**
-- ✅ Contract deployment verification
-- ✅ Product data retrieval
-- ✅ Basic info extraction
-- ✅ Verification status check
-- ✅ Error handling validation
-- ✅ Comprehensive test summary
-
-#### 7. **Network-Specific Testing**
-
-**Local Hardhat Node:**
-```bash
-# Terminal 1: Start local node
-npm run node
-
-# Terminal 2: Deploy to local node
-npx hardhat run scripts/deploy.js --network localhost
-
-# Terminal 2: Add sample product
-npx hardhat run scripts/addSampleProduct.js --network localhost
-```
-
-**Polygon Mumbai Testnet:**
-```bash
-# Setup .env file dengan private key dan RPC URL
-cp env.example .env
-# Edit .env dengan data yang benar
-
-# Deploy ke Mumbai testnet
-npm run deploy:mumbai
-
-# Add sample product ke Mumbai
-npm run add-sample:mumbai
-```
-
-#### 8. **Gas Usage Verification**
-```bash
-# Compile dengan gas reporter
-npx hardhat compile
-
-# Run tests dengan gas reporting
-REPORT_GAS=true npm test
-
-# Expected gas usage:
-# - addProduct(): ~471,192 gas
-# - verifyProduct(): ~49,990 gas
-# - Contract Deployment: ~2,125,698 gas
-```
-
-#### 9. **Error Handling Tests**
-
-Test error scenarios:
-
-```bash
-# Test 1: Try to add duplicate product ID
-npx hardhat run scripts/test-duplicate.js
-
-# Test 2: Try to get non-existent product
-npx hardhat run scripts/test-nonexistent.js
-
-# Test 3: Try unauthorized access
-npx hardhat run scripts/test-unauthorized.js
-```
-
-#### 10. **Cleanup Test**
-```bash
-# Clean build artifacts
-npm run clean
-
-# Verify cleanup
-ls artifacts/  # Should show no files
-
-# Recompile to ensure everything works after cleanup
-npm run compile
-```
-
-### 🎯 **Testing Checklist**
-
-- [ ] Dependencies installed correctly
-- [ ] Smart contracts compile successfully
-- [ ] All 13 automated tests pass
-- [ ] Local deployment works
-- [ ] Sample product addition works
-- [ ] Contract interaction functions work
-- [ ] Gas usage within expected ranges
-- [ ] Error handling works correctly
-- [ ] Network-specific deployment works
-- [ ] Cleanup and recompilation works
-
-### 🚨 **Troubleshooting Common Issues**
-
-**Issue**: "Stack too deep" compilation error
-**Solution**: viaIR: true already enabled in hardhat.config.js
-
-**Issue**: "Contract not found" error
-**Solution**: Run `npm run compile` first
-
-**Issue**: "Insufficient funds" on testnet
-**Solution**: Get testnet MATIC from [Mumbai Faucet](https://faucet.polygon.technology/)
-
-**Issue**: "Network not found" error
-**Solution**: Check network configuration in hardhat.config.js
-
-### 📊 **Expected Test Results**
-
-```
-✓ 13 passing (459ms)
-✓ Contract deployed successfully
-✓ Sample product added and verified
-✓ All functions working correctly
-✓ Gas usage optimized
-✓ Error handling functional
-```
-
-## 🔐 Security Features
-
-- **Access Control**: Hanya owner yang dapat menambah dan memverifikasi produk
-- **Input Validation**: Validasi data input untuk mencegah data kosong
-- **Reentrancy Protection**: Menggunakan OpenZeppelin ReentrancyGuard
-- **Unique ID Validation**: Mencegah duplikasi ID produk
-
-## 📁 Project Structure
-
-```
-prototype-5/
-├── contracts/
-│   └── BatikAuthenticity.sol    # Main smart contract
-├── scripts/
-│   ├── deploy.js                # Deployment script
-│   └── addSampleProduct.js      # Sample product addition
-├── test/
-│   └── BatikAuthenticity.test.js # Test suite
-├── hardhat.config.js            # Hardhat configuration
-├── package.json                 # Dependencies and scripts
-└── README.md                    # This file
-```
-
-## 🔮 Next Steps
-
-1. **Frontend Development**: Build Next.js frontend untuk konsumen
-2. **QR Code Integration**: Generate QR codes untuk produk fisik
-3. **IPFS Integration**: Store media files (images, videos) on IPFS
-4. **Mobile App**: Develop mobile application untuk scanning QR codes
-5. **Analytics Dashboard**: Build dashboard untuk tracking dan analytics
+- [Smart Contract Documentation](./hardhat/README.md)
+- [Frontend Documentation](./frontend/README.md)
+- [API Reference](./docs/api.md)
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork repository
+2. Create feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open Pull Request
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👥 Team
+## 🆘 Support
 
-- **Prototype-5 Development Team**
+- Create issue di GitHub repository
+- Check documentation di masing-masing workspace
+- Contact team melalui email: support@batikauthenticity.com
 
----
+## 🔗 Links
 
-**Prototype-5** - Bringing transparency and authenticity to Indonesian batik through blockchain technology 🇮🇩
+- [Polygon Mumbai Testnet](https://mumbai.polygonscan.com)
+- [MetaMask](https://metamask.io)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Hardhat Documentation](https://hardhat.org/docs)

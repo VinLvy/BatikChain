@@ -222,7 +222,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - Create issue di GitHub repository
 - Check documentation di masing-masing workspace
-- Contact team melalui email: support@batikauthenticity.com
 
 ## 🔗 Links
 

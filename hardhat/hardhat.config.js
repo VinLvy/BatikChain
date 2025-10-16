@@ -16,9 +16,13 @@ module.exports = {
         hardhat: {
             chainId: 1337
         },
-        polygonMumbai: {
-            url: "https://rpc-mumbai.maticvigil.com",
+        sepolia: {
+            url: process.env.SEPOLIA_RPC_URL || "https://rpc.sepolia.org",
             accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : []
+        },
+        amoy: {
+            url: process.env.POLYGON_AMOY_URL || "https://rpc-amoy.polygon.technology/",
+            accounts: [process.env.PRIVATE_KEY],
         },
         polygon: {
             url: "https://polygon-rpc.com",

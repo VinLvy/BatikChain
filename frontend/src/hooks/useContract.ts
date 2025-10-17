@@ -224,3 +224,4 @@ export const useContract = (provider: ethers.BrowserProvider | null, signer: eth
         isProductVerified,
     };
 };
+

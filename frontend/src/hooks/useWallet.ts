@@ -43,7 +43,7 @@ export const useWallet = () => {
                             account: accounts[0].address,
                             chainId,
                             isConnected: true,
-                            isCorrectNetwork: chainId === CONTRACT_CONFIG.POLYGON_MUMBAI.chainId,
+                            isCorrectNetwork: chainId === CONTRACT_CONFIG.ETHEREUM_SEPOLIA.chainId,
                             provider,
                             signer,
                         });
@@ -92,7 +92,7 @@ export const useWallet = () => {
         setWalletState(prev => ({
             ...prev,
             chainId: newChainId,
-            isCorrectNetwork: newChainId === CONTRACT_CONFIG.POLYGON_MUMBAI.chainId,
+            isCorrectNetwork: newChainId === CONTRACT_CONFIG.ETHEREUM_SEPOLIA.chainId,
         }));
     };
 
@@ -116,18 +116,19 @@ export const useWallet = () => {
                 account: accounts[0],
                 chainId,
                 isConnected: true,
-                isCorrectNetwork: chainId === CONTRACT_CONFIG.POLYGON_MUMBAI.chainId,
+                isCorrectNetwork: chainId === CONTRACT_CONFIG.ETHEREUM_SEPOLIA.chainId,
                 provider,
                 signer,
             });
-        } catch (err: any) {
-            setError(err.message || 'Gagal menghubungkan wallet');
+        } catch (err: unknown) {
+            const errorMessage = err instanceof Error ? err.message : 'Gagal menghubungkan wallet';
+            setError(errorMessage);
         } finally {
             setIsLoading(false);
         }
     };
 
-    const switchToMumbai = async () => {
+    const switchToSepolia = async () => {
         if (!window.ethereum) {
             setError('MetaMask tidak terinstall');
             return;
@@ -139,21 +140,23 @@ export const useWallet = () => {
         try {
             await window.ethereum.request({
                 method: 'wallet_switchEthereumChain',
-                params: [{ chainId: `0x${CONTRACT_CONFIG.POLYGON_MUMBAI.chainId.toString(16)}` }],
+                params: [{ chainId: `0x${CONTRACT_CONFIG.ETHEREUM_SEPOLIA.chainId.toString(16)}` }],
             });
-        } catch (err: any) {
+        } catch (err: unknown) {
             // If network doesn't exist, add it
-            if (err.code === 4902) {
+            if (err && typeof err === 'object' && 'code' in err && err.code === 4902) {
                 try {
                     await window.ethereum.request({
                         method: 'wallet_addEthereumChain',
-                        params: [CONTRACT_CONFIG.POLYGON_MUMBAI],
+                        params: [CONTRACT_CONFIG.ETHEREUM_SEPOLIA],
                     });
-                } catch (addErr: any) {
-                    setError(addErr.message || 'Gagal menambahkan network Mumbai');
+                } catch (addErr: unknown) {
+                    const errorMessage = addErr instanceof Error ? addErr.message : 'Gagal menambahkan network Sepolia';
+                    setError(errorMessage);
                 }
             } else {
-                setError(err.message || 'Gagal beralih ke network Mumbai');
+                const errorMessage = err instanceof Error ? err.message : 'Gagal beralih ke network Sepolia';
+                setError(errorMessage);
             }
         } finally {
             setIsLoading(false);
@@ -177,7 +180,8 @@ export const useWallet = () => {
         isLoading,
         error,
         connectWallet,
-        switchToMumbai,
+        switchToSepolia,
         disconnectWallet,
     };
 };
+

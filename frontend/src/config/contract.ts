@@ -1,14 +1,14 @@
 // Contract configuration for BatikAuthenticity
 export const CONTRACT_CONFIG = {
-    // Polygon Mumbai Testnet
-    POLYGON_MUMBAI: {
-        chainId: 80001,
-        chainName: 'Polygon Mumbai',
-        rpcUrls: ['https://rpc-mumbai.maticvigil.com'],
-        blockExplorerUrls: ['https://mumbai.polygonscan.com'],
+    // Ethereum Sepolia Testnet
+    ETHEREUM_SEPOLIA: {
+        chainId: 11155111,
+        chainName: 'Ethereum Sepolia',
+        rpcUrls: ['https://rpc.sepolia.org', 'https://sepolia.infura.io/v3/YOUR_INFURA_API_KEY'],
+        blockExplorerUrls: ['https://sepolia.etherscan.io'],
         nativeCurrency: {
-            name: 'MATIC',
-            symbol: 'MATIC',
+            name: 'Ethereum',
+            symbol: 'ETH',
             decimals: 18,
         },
     },
@@ -119,3 +119,4 @@ export interface ProductBasicInfo {
     technique: string;
     isVerified: boolean;
 }
+

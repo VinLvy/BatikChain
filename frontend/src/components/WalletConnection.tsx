@@ -10,7 +10,7 @@ export const WalletConnection = () => {
         isLoading,
         error,
         connectWallet,
-        switchToMumbai,
+        switchToSepolia,
         disconnectWallet,
     } = useWallet();
 
@@ -49,7 +49,7 @@ export const WalletConnection = () => {
                 </button>
 
                 <p className="text-xs text-gray-500 mt-4">
-                    Pastikan Anda menggunakan Polygon Mumbai Testnet
+                    Pastikan Anda menggunakan Ethereum Sepolia Testnet
                 </p>
             </div>
         );
@@ -67,7 +67,7 @@ export const WalletConnection = () => {
                     Network Salah
                 </h3>
                 <p className="text-gray-600 mb-4">
-                    Silakan beralih ke Polygon Mumbai Testnet untuk menggunakan aplikasi ini
+                    Silakan beralih ke Ethereum Sepolia Testnet untuk menggunakan aplikasi ini
                 </p>
 
                 {error && (
@@ -77,12 +77,12 @@ export const WalletConnection = () => {
                 )}
 
                 <button
-                    onClick={switchToMumbai}
+                    onClick={switchToSepolia}
                     disabled={isLoading}
                     className="bg-yellow-600 hover:bg-yellow-700 disabled:bg-yellow-400 text-white px-6 py-3 rounded-md transition-colors font-medium flex items-center space-x-2 mx-auto"
                 >
                     {isLoading && <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>}
-                    <span>Beralih ke Mumbai</span>
+                    <span>Beralih ke Sepolia</span>
                 </button>
             </div>
         );
@@ -102,7 +102,7 @@ export const WalletConnection = () => {
                         <p className="text-lg font-semibold text-gray-900 font-mono">
                             {account ? formatAddress(account) : ''}
                         </p>
-                        <p className="text-xs text-green-600">Polygon Mumbai Testnet</p>
+                        <p className="text-xs text-green-600">Ethereum Sepolia Testnet</p>
                     </div>
                 </div>
                 <button
@@ -118,3 +118,4 @@ export const WalletConnection = () => {
         </div>
     );
 };
+

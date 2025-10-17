@@ -1,13 +1,13 @@
 # Deployment Guide - Batik Authenticity Platform
 
-Panduan lengkap untuk deployment aplikasi Batik Authenticity Platform ke Polygon Mumbai Testnet.
+Panduan lengkap untuk deployment aplikasi Batik Authenticity Platform ke Ethereum Sepolia Testnet.
 
 ## 📋 Prerequisites
 
 - Node.js 18+
 - npm 8+
 - MetaMask wallet
-- Polygon Mumbai testnet MATIC tokens (untuk gas fees)
+- Ethereum Sepolia testnet ETH tokens (untuk gas fees)
 - Hardhat account dengan private key
 
 ## 🚀 Step-by-Step Deployment
@@ -23,8 +23,8 @@ cp env.example .env
 Edit `hardhat/.env`:
 ```env
 PRIVATE_KEY=your_wallet_private_key_here
-POLYGON_MUMBAI_URL=https://rpc-mumbai.maticvigil.com
-POLYGON_MUMBAI_API_KEY=your_api_key_optional
+SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_INFURA_API_KEY
+ETHERSCAN_API_KEY=your_etherscan_api_key_here
 ```
 
 #### Frontend Environment
@@ -44,8 +44,8 @@ NEXT_PUBLIC_CONTRACT_ADDRESS=0x...
 # Compile contract
 npm run compile
 
-# Deploy ke Mumbai testnet
-npm run deploy:mumbai
+# Deploy ke Sepolia testnet
+npm run deploy:sepolia
 ```
 
 **Output yang diharapkan:**
@@ -66,7 +66,7 @@ NEXT_PUBLIC_CONTRACT_ADDRESS=0x1234567890abcdef...
 
 ```bash
 # Menambahkan produk sample untuk testing
-npm run add-sample:mumbai
+npm run add-sample:sepolia
 ```
 
 ### 5. Start Frontend Development
@@ -82,8 +82,8 @@ Aplikasi akan berjalan di: http://localhost:3000
 ### 1. Wallet Connection Test
 - Buka http://localhost:3000
 - Klik "Hubungkan MetaMask"
-- Pastikan wallet terhubung ke Polygon Mumbai Testnet
-- Jika belum, klik "Beralih ke Mumbai"
+- Pastikan wallet terhubung ke Ethereum Sepolia Testnet
+- Jika belum, klik "Beralih ke Sepolia"
 
 ### 2. Contract Interaction Test
 - Setelah wallet terhubung, seharusnya muncul daftar produk
@@ -91,8 +91,8 @@ Aplikasi akan berjalan di: http://localhost:3000
 - Test fitur pencarian dan filter
 
 ### 3. Network Verification
-- Pastikan di MetaMask menampilkan "Polygon Mumbai"
-- Pastikan balance MATIC cukup untuk gas fees
+- Pastikan di MetaMask menampilkan "Ethereum Sepolia"
+- Pastikan balance ETH cukup untuk gas fees
 - Test transaksi jika diperlukan
 
 ## 🌐 Production Deployment
@@ -129,23 +129,23 @@ npm run build:frontend
 
 Pastikan set environment variables di platform hosting:
 - `NEXT_PUBLIC_CONTRACT_ADDRESS`
-- `NEXT_PUBLIC_NETWORK_CHAIN_ID=80001`
-- `NEXT_PUBLIC_RPC_URL=https://rpc-mumbai.maticvigil.com`
+- `NEXT_PUBLIC_NETWORK_CHAIN_ID=11155111`
+- `NEXT_PUBLIC_RPC_URL=https://rpc.sepolia.org`
 
 ## 🔍 Troubleshooting
 
 ### Contract Deployment Issues
 
 **Error: Insufficient funds**
-- Pastikan wallet memiliki MATIC untuk gas fees
-- Check balance di Mumbai testnet
+- Pastikan wallet memiliki ETH untuk gas fees
+- Check balance di Sepolia testnet
 
 **Error: Invalid private key**
 - Pastikan private key format benar (0x...)
 - Jangan gunakan mnemonic phrase
 
 **Error: Network connection**
-- Check RPC URL Mumbai
+- Check RPC URL Sepolia
 - Pastikan internet connection stabil
 
 ### Frontend Issues
@@ -160,7 +160,7 @@ Pastikan set environment variables di platform hosting:
 - Clear browser cache dan reload
 
 **Error: Network mismatch**
-- Pastikan wallet terhubung ke Polygon Mumbai
+- Pastikan wallet terhubung ke Ethereum Sepolia
 - Update network configuration jika perlu
 
 ### Smart Contract Interaction Issues
@@ -177,7 +177,7 @@ Pastikan set environment variables di platform hosting:
 ## 📊 Monitoring
 
 ### Contract Monitoring
-- Monitor contract di [Mumbai PolygonScan](https://mumbai.polygonscan.com)
+- Monitor contract di [Sepolia Etherscan](https://sepolia.etherscan.io)
 - Check transaction history
 - Monitor gas usage
 
@@ -190,7 +190,7 @@ Pastikan set environment variables di platform hosting:
 
 - [ ] Private key tidak tersimpan di public repository
 - [ ] Environment variables tidak exposed
-- [ ] Contract sudah di-verify di PolygonScan
+- [ ] Contract sudah di-verify di Etherscan
 - [ ] Frontend menggunakan HTTPS di production
 - [ ] MetaMask connection aman
 - [ ] Input validation pada frontend
@@ -199,14 +199,14 @@ Pastikan set environment variables di platform hosting:
 
 Jika mengalami masalah:
 1. Check error logs di browser console
-2. Check transaction status di PolygonScan
+2. Check transaction status di Etherscan
 3. Verify contract deployment
 4. Check network configuration
 5. Create issue di GitHub repository
 
 ## 🔗 Useful Links
 
-- [Polygon Mumbai Faucet](https://faucet.polygon.technology/) - Get test MATIC
-- [Mumbai PolygonScan](https://mumbai.polygonscan.com) - Block explorer
+- [Sepolia Faucet](https://sepoliafaucet.com/) - Get test ETH
+- [Sepolia Etherscan](https://sepolia.etherscan.io) - Block explorer
 - [MetaMask](https://metamask.io) - Wallet setup
-- [Polygon Documentation](https://docs.polygon.technology/)
+- [Ethereum Documentation](https://ethereum.org/en/developers/docs/)

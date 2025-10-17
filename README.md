@@ -1,6 +1,6 @@
 # Batik Authenticity Platform
 
-Platform verifikasi keaslian produk batik Indonesia menggunakan teknologi blockchain Polygon. Sistem ini memungkinkan pengrajin untuk mendaftarkan produk batik mereka dengan informasi lengkap dan transparan, sementara konsumen dapat memverifikasi keaslian produk melalui blockchain.
+Platform verifikasi keaslian produk batik Indonesia menggunakan teknologi blockchain Ethereum. Sistem ini memungkinkan pengrajin untuk mendaftarkan produk batik mereka dengan informasi lengkap dan transparan, sementara konsumen dapat memverifikasi keaslian produk melalui blockchain.
 
 ## 🏗️ Struktur Monorepo
 
@@ -25,7 +25,7 @@ Platform verifikasi keaslian produk batik Indonesia menggunakan teknologi blockc
 - Node.js 18+ 
 - npm 8+
 - MetaMask wallet
-- Polygon Mumbai testnet MATIC tokens
+- Ethereum Sepolia testnet ETH tokens
 
 ### Installation
 
@@ -51,7 +51,7 @@ cp frontend/.env.example frontend/.env.local
 
 4. Deploy smart contract:
 ```bash
-npm run deploy:mumbai
+npm run deploy:sepolia
 ```
 
 5. Update contract address di `frontend/.env.local` dengan address yang didapat dari deployment.
@@ -79,8 +79,8 @@ Smart contract development environment untuk BatikAuthenticity.sol.
 cd hardhat
 npm run compile     # Compile contracts
 npm run test        # Run tests
-npm run deploy:mumbai  # Deploy to Mumbai testnet
-npm run add-sample:mumbai  # Add sample product
+npm run deploy:sepolia  # Deploy to Sepolia testnet
+npm run add-sample:sepolia  # Add sample product
 ```
 
 ### Frontend (`./frontend/`)
@@ -93,7 +93,7 @@ Next.js web application untuk interaksi dengan smart contract.
 - 🔍 Search dan filter produk
 - 📋 Product detail view
 - ✅ Verification status display
-- 🌐 Polygon Mumbai network support
+- 🌐 Ethereum Sepolia network support
 
 **Commands:**
 ```bash
@@ -111,8 +111,8 @@ npm run lint     # ESLint check
 Update `hardhat/.env` dengan:
 ```
 PRIVATE_KEY=your_private_key
-POLYGON_MUMBAI_URL=https://rpc-mumbai.maticvigil.com
-POLYGON_MUMBAI_API_KEY=your_api_key
+SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_INFURA_API_KEY
+ETHERSCAN_API_KEY=your_etherscan_api_key
 ```
 
 ### Frontend
@@ -162,11 +162,11 @@ struct Product {
 
 ## 🌐 Network Configuration
 
-### Polygon Mumbai Testnet
-- **Chain ID:** 80001
-- **RPC URL:** https://rpc-mumbai.maticvigil.com
-- **Block Explorer:** https://mumbai.polygonscan.com
-- **Currency:** MATIC
+### Ethereum Sepolia Testnet
+- **Chain ID:** 11155111
+- **RPC URL:** https://rpc.sepolia.org
+- **Block Explorer:** https://sepolia.etherscan.io
+- **Currency:** ETH
 
 ## 🧪 Testing
 
@@ -190,7 +190,7 @@ npm run lint
 
 ### Smart Contract
 ```bash
-npm run deploy:mumbai    # Mumbai testnet
+npm run deploy:sepolia   # Sepolia testnet
 npm run deploy:polygon   # Polygon mainnet
 ```
 
@@ -225,7 +225,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔗 Links
 
-- [Polygon Mumbai Testnet](https://mumbai.polygonscan.com)
+- [Ethereum Sepolia Testnet](https://sepolia.etherscan.io)
+- [Sepolia Faucet](https://sepoliafaucet.com/)
 - [MetaMask](https://metamask.io)
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Hardhat Documentation](https://hardhat.org/docs)

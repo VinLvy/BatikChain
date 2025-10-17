@@ -180,3 +180,4 @@ export const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
         </div>
     );
 };
+

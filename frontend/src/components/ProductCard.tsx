@@ -105,3 +105,4 @@ export const ProductCard = ({ product, onViewDetails }: ProductCardProps) => {
         </div>
     );
 };
+

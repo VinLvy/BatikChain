@@ -1,6 +1,6 @@
-# Deployment Guide - Batik Authenticity Platform
+# Deployment Guide - BatikChain
 
-Panduan lengkap untuk deployment aplikasi Batik Authenticity Platform ke Ethereum Sepolia Testnet.
+Panduan lengkap untuk deployment aplikasi BatikChain ke Ethereum Sepolia Testnet.
 
 ## 📋 Prerequisites
 
@@ -50,7 +50,7 @@ npm run deploy:sepolia
 
 **Output yang diharapkan:**
 ```
-BatikAuthenticity deployed to: 0x1234567890abcdef...
+BatikChain deployed to: 0x1234567890abcdef...
 ```
 
 **⚠️ Penting:** Simpan contract address yang ditampilkan!

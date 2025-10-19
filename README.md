@@ -1,4 +1,4 @@
-# Batik Authenticity Platform
+# BatikChain
 
 Platform verifikasi keaslian produk batik Indonesia menggunakan teknologi blockchain Ethereum. Sistem ini memungkinkan pengrajin untuk mendaftarkan produk batik mereka dengan informasi lengkap dan transparan, sementara konsumen dapat memverifikasi keaslian produk melalui blockchain.
 
@@ -32,7 +32,6 @@ Platform verifikasi keaslian produk batik Indonesia menggunakan teknologi blockc
 1. Clone repository:
 ```bash
 git clone <repository-url>
-cd batik-authenticity-monorepo
 ```
 
 2. Install dependencies untuk semua workspace:

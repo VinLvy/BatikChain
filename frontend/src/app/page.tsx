@@ -15,7 +15,7 @@ export default function Home() {
           <div className="flex justify-between items-center py-6">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
-                Batik Authenticity
+                BatikChain
               </h1>
               <p className="text-gray-600 mt-1">
                 Platform Verifikasi Keaslian Produk Batik Indonesia
@@ -64,14 +64,12 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Batik Authenticity Platform
+              Batik Chain
             </h3>
             <p className="text-gray-600 mb-4">
               Menjamin keaslian dan transparansi produk batik Indonesia melalui teknologi blockchain
             </p>
             <div className="flex justify-center space-x-6 text-sm text-gray-500">
-              <span>Powered by Polygon Mumbai Testnet</span>
-              <span>•</span>
               <span>Smart Contract Verified</span>
               <span>•</span>
               <span>Decentralized Authentication</span>

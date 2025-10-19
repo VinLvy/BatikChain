@@ -1,4 +1,4 @@
-# Batik Authenticity Frontend
+# BatikChain Frontend
 
 Frontend aplikasi Next.js untuk platform verifikasi keaslian produk batik Indonesia menggunakan teknologi blockchain.
 
@@ -43,7 +43,7 @@ npm run dev
 
 ## Konfigurasi Contract
 
-Pastikan contract address sudah benar di file `.env.local`. Contract address bisa didapatkan setelah deployment smart contract BatikAuthenticity.sol ke Polygon Mumbai Testnet.
+Pastikan contract address sudah benar di file `.env.local`. Contract address bisa didapatkan setelah deployment smart contract BatikAuthenticity.sol ke Ethereum Sepolia Testnet.
 
 ## Struktur Project
 

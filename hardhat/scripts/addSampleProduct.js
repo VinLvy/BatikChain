@@ -15,7 +15,7 @@ async function main() {
     }
 
     // Get the contract instance
-    const BatikAuthenticity = await hre.ethers.getContractFactory("BatikAuthenticity");
+    const BatikAuthenticity = await hre.ethers.getContractFactory("BatikChain");
     const contract = BatikAuthenticity.attach(contractAddress);
 
     // Sample product data

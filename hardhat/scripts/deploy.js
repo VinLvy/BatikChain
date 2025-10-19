@@ -1,10 +1,10 @@
 const hre = require("hardhat");
 
 async function main() {
-    console.log("Deploying BatikAuthenticity contract...");
+    console.log("Deploying BatikChain contract...");
 
     // Get the contract factory
-    const BatikAuthenticity = await hre.ethers.getContractFactory("BatikAuthenticity");
+    const BatikAuthenticity = await hre.ethers.getContractFactory("BatikChain");
 
     // Deploy the contract
     const batikAuthenticity = await BatikAuthenticity.deploy();
@@ -14,7 +14,7 @@ async function main() {
 
     const contractAddress = await batikAuthenticity.getAddress();
 
-    console.log("BatikAuthenticity deployed to:", contractAddress);
+    console.log("BatikChain deployed to:", contractAddress);
     console.log("Network:", hre.network.name);
 
     // Save contract address to file for frontend use

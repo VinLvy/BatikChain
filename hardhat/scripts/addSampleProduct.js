@@ -15,26 +15,28 @@ async function main() {
     }
 
     // Get the contract instance
-    const BatikAuthenticity = await hre.ethers.getContractFactory("BatikChain");
+    const BatikAuthenticity = await hre.ethers.getContractFactory("BatikAuthenticity");
     const contract = BatikAuthenticity.attach(contractAddress);
 
     // Sample product data
     const sampleProduct = {
-        id: 1,
-        productName: "Batik Parang Klasik",
-        artisanName: "Sari Indah",
-        artisanAddress: "Jl. Batik No. 123, Desa Batik",
-        village: "Desa Batik",
-        district: "Kecamatan Batik",
-        regency: "Kabupaten Batik",
-        province: "Jawa Tengah",
-        coordinates: "-7.7956,110.3695",
-        technique: "Batik Tulis",
-        materials: "Kain Mori, Lilin, Pewarna Alami",
-        description: "Batik tradisional dengan motif parang yang dibuat dengan teknik tulis tangan oleh pengrajin berpengalaman.",
-        imageHash: "QmSampleProductImageHash123456789",
-        artisanImageHash: "QmSampleArtisanImageHash987654321",
-        videoHash: "QmSampleVideoHash456789123"
+        id: 2,
+        productName: "Batik Mega Mendung Cirebon",
+        artisanName: "Bu Sukinah",
+        artisanAddress: "Jl. Trusmi Kulon No. 45, Plered",
+        village: "Trusmi",
+        district: "Plered",
+        regency: "Cirebon",
+        province: "Jawa Barat",
+        coordinates: "-6.7325, 108.4916",
+        technique: "Batik Cap",
+        materials: "Kain Katun, Malam, Pewarna Sintetis",
+        description: "Batik cap khas Cirebon dengan motif Mega Mendung yang ikonik, melambangkan awan pembawa hujan kesuburan.",
+
+        // --- Masukkan HASH (CID) dari Pinata di sini ---
+        imageHash: "bafkreiarrbnq5vna43yiqjtssydwztlrdnaramljxhcntrghmu6rek4mzy",
+        artisanImageHash: "bafkreiatsvdgiaqgcavb4yao6b7nawix73ezhmgass6of7adv6pc4t3vgy",
+        videoHash: "bafybeicfzlwvcequevkx5plnflvkk67fro552yxybamvhz7f7uvembzvv4"
     };
 
     console.log("Adding sample product...");

@@ -4,7 +4,7 @@ async function main() {
     console.log("Deploying BatikChain contract...");
 
     // Get the contract factory
-    const BatikAuthenticity = await hre.ethers.getContractFactory("BatikChain");
+    const BatikAuthenticity = await hre.ethers.getContractFactory("BatikAuthenticity");
 
     // Deploy the contract
     const batikAuthenticity = await BatikAuthenticity.deploy();

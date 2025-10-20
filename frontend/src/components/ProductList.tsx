@@ -1,33 +1,53 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { ethers } from 'ethers';
 import { Product } from '@/config/contract';
 import { ProductCard } from './ProductCard';
 import { ProductDetail } from './ProductDetail';
 import { useContract } from '@/hooks/useContract';
 
 interface ProductListProps {
-    provider: any;
-    signer: any;
+    provider: ethers.BrowserProvider | null; 
+    signer: ethers.JsonRpcSigner | null; 
 }
 
-export const ProductList = ({ provider, signer }: ProductListProps) => {
+export const ProductList = ({ provider }: ProductListProps) => { 
     const [products, setProducts] = useState<Product[]>([]);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterVerified, setFilterVerified] = useState<'all' | 'verified' | 'unverified'>('all');
     const [filterTechnique, setFilterTechnique] = useState('all');
 
-    const { getAllProducts, isLoading, error } = useContract(provider, signer);
+    const { getAllProducts, isLoading, error } = useContract(provider); 
+
+    // PERBAIKAN 1: Hapus 'isLoading' dari dependency array
+    const loadProducts = useCallback(async () => {
+        // Cek provider
+        if (!provider) return; 
+
+        // Panggil fungsi fetch (yang memiliki isLoading-nya sendiri)
+        const allProducts = await getAllProducts();
+        
+        // Logika tambahan: Periksa apakah produk ditemukan
+        if (allProducts && allProducts.length > 0) {
+             setProducts(allProducts);
+        } else if (allProducts && allProducts.length === 0) {
+             // PERBAIKAN 2: Sederhanakan logika logging (hapus pengecekan !isLoading yang redundant)
+             console.log("Kontrak terhubung, tetapi tidak ada produk terdaftar.");
+        }
+        
+    // PERBAIKAN 3: Dependency yang stabil
+    // Dependency hanya bergantung pada fungsi getAllProducts (yang stabil) dan provider (dari props)
+    }, [getAllProducts, provider]); 
+
 
     useEffect(() => {
-        loadProducts();
-    }, [provider]);
-
-    const loadProducts = async () => {
-        const allProducts = await getAllProducts();
-        setProducts(allProducts);
-    };
+        if (provider) {
+            loadProducts();
+        }
+    // Dependency: provider dan fungsi loadProducts yang stabil
+    }, [provider, loadProducts]);
 
     const handleViewDetails = (product: Product) => {
         setSelectedProduct(product);
@@ -56,6 +76,9 @@ export const ProductList = ({ provider, signer }: ProductListProps) => {
     // Get unique techniques for filter
     const uniqueTechniques = Array.from(new Set(products.map(p => p.technique)));
 
+    // ... (Sisa JSX tetap sama)
+    // Di sini tidak ada perubahan substansial, karena warnings sudah teratasi di atas.
+    
     if (isLoading && products.length === 0) {
         return (
             <div className="flex items-center justify-center min-h-64">
@@ -89,7 +112,7 @@ export const ProductList = ({ provider, signer }: ProductListProps) => {
 
     return (
         <div className="space-y-6">
-            {/* Header */}
+            {/* ... (sisa JSX) */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-900">Katalog Produk Batik</h2>
@@ -131,7 +154,7 @@ export const ProductList = ({ provider, signer }: ProductListProps) => {
                         </label>
                         <select
                             value={filterVerified}
-                            onChange={(e) => setFilterVerified(e.target.value as any)}
+                            onChange={(e) => setFilterVerified(e.target.value as 'all' | 'verified' | 'unverified')} // Perbaikan: Gunakan assertion yang lebih spesifik
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                             <option value="all">Semua</option>
@@ -162,7 +185,7 @@ export const ProductList = ({ provider, signer }: ProductListProps) => {
             </div>
 
             {/* Products Grid */}
-            {filteredProducts.length === 0 ? (
+            {filteredProducts.length === 0 && !isLoading ? (
                 <div className="text-center py-12">
                     <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <svg className="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
@@ -198,4 +221,3 @@ export const ProductList = ({ provider, signer }: ProductListProps) => {
         </div>
     );
 };
-

@@ -1,10 +1,9 @@
-// Contract configuration for BatikAuthenticity
 export const CONTRACT_CONFIG = {
     // Ethereum Sepolia Testnet
     ETHEREUM_SEPOLIA: {
         chainId: 11155111,
         chainName: 'Ethereum Sepolia',
-        rpcUrls: ['https://rpc.sepolia.org', 'https://sepolia.infura.io/v3/YOUR_INFURA_API_KEY'],
+        rpcUrls: ['https://ethereum-sepolia-rpc.publicnode.com'],
         blockExplorerUrls: ['https://sepolia.etherscan.io'],
         nativeCurrency: {
             name: 'Ethereum',

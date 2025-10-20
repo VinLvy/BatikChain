@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+// 1. TAMBAHKAN 'useCallback' DI SINI
+import { useState, useEffect, useCallback } from 'react';
 import { ethers } from 'ethers';
 import { CONTRACT_CONFIG } from '@/config/contract';
 
@@ -23,16 +24,57 @@ export const useWallet = () => {
         signer: null,
     });
 
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Check if wallet is already connected
+    // 2. WRAP 'disconnectWallet' DENGAN 'useCallback'
+    const disconnectWallet = useCallback(() => {
+        setWalletState({
+            account: null,
+            chainId: null,
+            isConnected: false,
+            isCorrectNetwork: false,
+            provider: null,
+            signer: null,
+        });
+        setError(null);
+    // Dependencies setWalletState dan setError adalah stable function dari React, jadi fungsi disconnectWallet menjadi stabil.
+    }, [setWalletState, setError]); 
+    
+    // Perbaikan 1: Pindahkan handleAccountsChanged & handleChainChanged ke dalam useEffect
+    // Pilihan lain (lebih bersih): Gunakan useCallback jika handler ini akan digunakan di tempat lain
+    // Namun untuk kasus event listener, yang terbaik adalah definisikan handler di dalam useEffect atau pastikan dependency array-nya kosong
+
     useEffect(() => {
+        
+        // Handler untuk akun berubah
+        const handleAccountsChanged = (accounts: string[]) => {
+            if (accounts.length === 0) {
+                // Jika user disconnect, reset semua state
+                disconnectWallet();
+            } else {
+                // Jika user ganti akun, update state
+                setWalletState(prev => ({
+                    ...prev,
+                    account: accounts[0],
+                    isConnected: true,
+                }));
+            }
+        };
+
+        // Handler untuk jaringan (chain) berubah
+        const handleChainChanged = () => { 
+            // Cara paling aman untuk menangani pergantian jaringan adalah me-reload halaman
+            window.location.reload();
+        };
+
+
         const checkConnection = async () => {
             if (typeof window !== 'undefined' && window.ethereum) {
                 try {
                     const provider = new ethers.BrowserProvider(window.ethereum);
-                    const accounts = await provider.listAccounts();
+                    // Gunakan eth_accounts untuk cek koneksi tanpa memicu pop-up
+                    const accounts = await provider.send('eth_accounts', []); 
 
                     if (accounts.length > 0) {
                         const signer = await provider.getSigner();
@@ -40,7 +82,7 @@ export const useWallet = () => {
                         const chainId = Number(network.chainId);
 
                         setWalletState({
-                            account: accounts[0].address,
+                            account: signer.address,
                             chainId,
                             isConnected: true,
                             isCorrectNetwork: chainId === CONTRACT_CONFIG.ETHEREUM_SEPOLIA.chainId,
@@ -52,51 +94,37 @@ export const useWallet = () => {
                     console.error('Error checking wallet connection:', err);
                 }
             }
+            setIsLoading(false);
         };
 
         checkConnection();
 
-        // Listen for account changes
-        if (window.ethereum) {
+        // Listeners
+        if (typeof window !== 'undefined' && window.ethereum) {
             window.ethereum.on('accountsChanged', handleAccountsChanged);
             window.ethereum.on('chainChanged', handleChainChanged);
         }
 
         return () => {
-            if (window.ethereum) {
+            if (typeof window !== 'undefined' && window.ethereum) {
                 window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
                 window.ethereum.removeListener('chainChanged', handleChainChanged);
             }
         };
-    }, []);
+    // Karena disconnectWallet sekarang stabil (wrapped in useCallback), dependency ini valid
+    }, [disconnectWallet, setWalletState]); 
 
-    const handleAccountsChanged = (accounts: string[]) => {
-        if (accounts.length === 0) {
-            setWalletState(prev => ({
-                ...prev,
-                account: null,
-                isConnected: false,
-                signer: null,
-            }));
-        } else {
-            setWalletState(prev => ({
-                ...prev,
-                account: accounts[0],
-                isConnected: true,
-            }));
-        }
-    };
 
-    const handleChainChanged = (chainId: string) => {
-        const newChainId = parseInt(chainId, 16);
-        setWalletState(prev => ({
-            ...prev,
-            chainId: newChainId,
-            isCorrectNetwork: newChainId === CONTRACT_CONFIG.ETHEREUM_SEPOLIA.chainId,
-        }));
-    };
-
+    // Fungsi connectWallet dan switchToSepolia juga disarankan menggunakan useCallback 
+    // agar lebih konsisten, tetapi tidak akan menyebabkan error jika tidak dipakai.
+    // Untuk saat ini, kita fokus pada perbaikan error yang ada.
+    
+    // ... (Fungsi connectWallet, switchToSepolia, dan return tetap sama)
     const connectWallet = async () => {
+        if (isLoading || walletState.isConnected) {
+            return;
+        }
+
         if (!window.ethereum) {
             setError('MetaMask tidak terinstall. Silakan install MetaMask terlebih dahulu.');
             return;
@@ -129,6 +157,7 @@ export const useWallet = () => {
     };
 
     const switchToSepolia = async () => {
+        // ... (Tidak ada perubahan)
         if (!window.ethereum) {
             setError('MetaMask tidak terinstall');
             return;
@@ -143,7 +172,6 @@ export const useWallet = () => {
                 params: [{ chainId: `0x${CONTRACT_CONFIG.ETHEREUM_SEPOLIA.chainId.toString(16)}` }],
             });
         } catch (err: unknown) {
-            // If network doesn't exist, add it
             if (err && typeof err === 'object' && 'code' in err && err.code === 4902) {
                 try {
                     await window.ethereum.request({
@@ -163,17 +191,6 @@ export const useWallet = () => {
         }
     };
 
-    const disconnectWallet = () => {
-        setWalletState({
-            account: null,
-            chainId: null,
-            isConnected: false,
-            isCorrectNetwork: false,
-            provider: null,
-            signer: null,
-        });
-        setError(null);
-    };
 
     return {
         ...walletState,
@@ -184,4 +201,3 @@ export const useWallet = () => {
         disconnectWallet,
     };
 };
-

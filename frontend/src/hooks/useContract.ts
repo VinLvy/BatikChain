@@ -1,26 +1,34 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ethers } from 'ethers';
 import { CONTRACT_CONFIG, Product, ProductBasicInfo } from '@/config/contract';
 
-export const useContract = (provider: ethers.BrowserProvider | null, signer: ethers.JsonRpcSigner | null) => {
+const CONTRACT_ADDRESS = CONTRACT_CONFIG.CONTRACT_ADDRESS;
+const CONTRACT_ABI = CONTRACT_CONFIG.CONTRACT_ABI;
+
+export const useContract = (provider: ethers.BrowserProvider | null) => { 
     const [contract, setContract] = useState<ethers.Contract | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (provider && CONTRACT_CONFIG.CONTRACT_ADDRESS) {
+        // HANYA provider yang dimasukkan sebagai dependency
+        if (provider && CONTRACT_ADDRESS) { 
             const contractInstance = new ethers.Contract(
-                CONTRACT_CONFIG.CONTRACT_ADDRESS,
-                CONTRACT_CONFIG.CONTRACT_ABI,
+                CONTRACT_ADDRESS, // Menggunakan variabel lokal yang stabil
+                CONTRACT_ABI,     // Menggunakan variabel lokal yang stabil
                 provider
             );
             setContract(contractInstance);
+        } else {
+            setContract(null);
         }
-    }, [provider]);
+    // Hapus CONTRACT_ADDRESS dari dependency array
+    // Provider adalah satu-satunya dependency yang diperlukan di sini
+    }, [provider]); 
 
-    const getProduct = async (id: number): Promise<Product | null> => {
+    const getProduct = useCallback(async (id: number): Promise<Product | null> => {
         if (!contract) {
             setError('Contract belum terhubung');
             return null;
@@ -51,15 +59,16 @@ export const useContract = (provider: ethers.BrowserProvider | null, signer: eth
                 isVerified: product.isVerified,
                 verifiedBy: product.verifiedBy,
             };
-        } catch (err: any) {
-            setError(err.message || 'Gagal mengambil data produk');
+        } catch (err: unknown) { // Perbaikan: Menggunakan unknown
+            const message = err instanceof Error ? err.message : 'Gagal mengambil data produk';
+            setError(message);
             return null;
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [contract, setError, setIsLoading]);
 
-    const getProductBasicInfo = async (id: number): Promise<ProductBasicInfo | null> => {
+    const getProductBasicInfo = useCallback(async (id: number): Promise<ProductBasicInfo | null> => {
         if (!contract) {
             setError('Contract belum terhubung');
             return null;
@@ -78,15 +87,16 @@ export const useContract = (provider: ethers.BrowserProvider | null, signer: eth
                 technique: info.technique,
                 isVerified: info.isVerified,
             };
-        } catch (err: any) {
-            setError(err.message || 'Gagal mengambil informasi dasar produk');
+        } catch (err: unknown) { // Perbaikan: Menggunakan unknown
+            const message = err instanceof Error ? err.message : 'Gagal mengambil informasi dasar produk';
+            setError(message);
             return null;
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [contract, setError, setIsLoading]);
 
-    const getTotalProducts = async (): Promise<number> => {
+    const getTotalProducts = useCallback(async (): Promise<number> => {
         if (!contract) {
             setError('Contract belum terhubung');
             return 0;
@@ -98,15 +108,16 @@ export const useContract = (provider: ethers.BrowserProvider | null, signer: eth
         try {
             const total = await contract.getTotalProducts();
             return Number(total);
-        } catch (err: any) {
-            setError(err.message || 'Gagal mengambil jumlah total produk');
+        } catch (err: unknown) { // Perbaikan: Menggunakan unknown
+            const message = err instanceof Error ? err.message : 'Gagal mengambil jumlah total produk';
+            setError(message);
             return 0;
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [contract, setError, setIsLoading]);
 
-    const getAllProductIds = async (): Promise<number[]> => {
+    const getAllProductIds = useCallback(async (): Promise<number[]> => {
         if (!contract) {
             setError('Contract belum terhubung');
             return [];
@@ -117,23 +128,28 @@ export const useContract = (provider: ethers.BrowserProvider | null, signer: eth
 
         try {
             const total = await contract.getTotalProducts();
-            const productIds: number[] = [];
+            const totalCount = Number(total);
 
-            for (let i = 0; i < Number(total); i++) {
-                const id = await contract.getProductIdByIndex(i);
-                productIds.push(Number(id));
+            // Peningkatan Performa: Ambil semua ID secara konkuren
+            const indexPromises = [];
+            for (let i = 0; i < totalCount; i++) {
+                indexPromises.push(contract.getProductIdByIndex(i));
             }
+            
+            const rawIds = await Promise.all(indexPromises);
+            // Gunakan map untuk mengubah BigInt menjadi Number
+            return rawIds.map((id: bigint) => Number(id));
 
-            return productIds;
-        } catch (err: any) {
-            setError(err.message || 'Gagal mengambil daftar ID produk');
+        } catch (err: unknown) { // Perbaikan: Menggunakan unknown
+            const message = err instanceof Error ? err.message : 'Gagal mengambil daftar ID produk';
+            setError(message);
             return [];
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [contract, setError, setIsLoading]);
 
-    const getAllProducts = async (): Promise<Product[]> => {
+    const getAllProducts = useCallback(async (): Promise<Product[]> => {
         if (!contract) {
             setError('Contract belum terhubung');
             return [];
@@ -144,25 +160,23 @@ export const useContract = (provider: ethers.BrowserProvider | null, signer: eth
 
         try {
             const productIds = await getAllProductIds();
-            const products: Product[] = [];
+            
+            // Peningkatan Performa: Ambil semua detail produk secara konkuren
+            const productPromises = productIds.map(id => getProduct(id));
+            const products = await Promise.all(productPromises);
+            
+            return products.filter((product): product is Product => product !== null);
 
-            for (const id of productIds) {
-                const product = await getProduct(id);
-                if (product) {
-                    products.push(product);
-                }
-            }
-
-            return products;
-        } catch (err: any) {
-            setError(err.message || 'Gagal mengambil semua produk');
+        } catch (err: unknown) { // Perbaikan: Menggunakan unknown
+            const message = err instanceof Error ? err.message : 'Gagal mengambil semua produk';
+            setError(message);
             return [];
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [contract, getAllProductIds, getProduct, setError, setIsLoading]);
 
-    const getAllProductsBasicInfo = async (): Promise<ProductBasicInfo[]> => {
+    const getAllProductsBasicInfo = useCallback(async (): Promise<ProductBasicInfo[]> => {
         if (!contract) {
             setError('Contract belum terhubung');
             return [];
@@ -173,25 +187,22 @@ export const useContract = (provider: ethers.BrowserProvider | null, signer: eth
 
         try {
             const productIds = await getAllProductIds();
-            const products: ProductBasicInfo[] = [];
+            
+            // Peningkatan Performa: Ambil semua info dasar secara konkuren
+            const infoPromises = productIds.map(id => getProductBasicInfo(id));
+            const products = await Promise.all(infoPromises);
 
-            for (const id of productIds) {
-                const product = await getProductBasicInfo(id);
-                if (product) {
-                    products.push(product);
-                }
-            }
-
-            return products;
-        } catch (err: any) {
-            setError(err.message || 'Gagal mengambil informasi dasar semua produk');
+            return products.filter((product): product is ProductBasicInfo => product !== null);
+        } catch (err: unknown) { // Perbaikan: Menggunakan unknown
+            const message = err instanceof Error ? err.message : 'Gagal mengambil informasi dasar semua produk';
+            setError(message);
             return [];
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [contract, getAllProductIds, getProductBasicInfo, setError, setIsLoading]);
 
-    const isProductVerified = async (id: number): Promise<boolean> => {
+    const isProductVerified = useCallback(async (id: number): Promise<boolean> => {
         if (!contract) {
             setError('Contract belum terhubung');
             return false;
@@ -203,13 +214,14 @@ export const useContract = (provider: ethers.BrowserProvider | null, signer: eth
         try {
             const verified = await contract.isProductVerified(id);
             return verified;
-        } catch (err: any) {
-            setError(err.message || 'Gagal memeriksa status verifikasi produk');
+        } catch (err: unknown) { // Perbaikan: Menggunakan unknown
+            const message = err instanceof Error ? err.message : 'Gagal memeriksa status verifikasi produk';
+            setError(message);
             return false;
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [contract, setError, setIsLoading]);
 
     return {
         contract,
@@ -224,4 +236,3 @@ export const useContract = (provider: ethers.BrowserProvider | null, signer: eth
         isProductVerified,
     };
 };
-

@@ -1,6 +1,7 @@
 'use client';
 
 import { Product } from '@/config/contract';
+import Image from 'next/image';
 import { useEffect } from 'react';
 
 interface ProductDetailProps {
@@ -60,9 +61,9 @@ export const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
                             {/* Left Side - Image */}
                             <div className="relative h-96 lg:h-auto bg-gradient-to-br from-blue-900/50 to-purple-900/50">
-                                {product.imageUrl ? (
-                                    <img 
-                                        src={product.imageUrl} 
+                                {product.imageHash ? (
+                                    <Image 
+                                        src={product.imageHash} 
                                         alt={product.productName}
                                         className="w-full h-full object-cover"
                                     />
@@ -158,13 +159,13 @@ export const ProductDetail = ({ product, onClose }: ProductDetailProps) => {
                                             </svg>
                                             <span className="text-xs text-blue-200/60 font-medium uppercase">Production</span>
                                         </div>
-                                        <div className="text-lg font-bold text-white">
+                                        {/* <div className="text-lg font-bold text-white">
                                             {new Date(Number(product.productionDate) * 1000).toLocaleDateString('id-ID', {
                                                 day: 'numeric',
                                                 month: 'long',
                                                 year: 'numeric'
                                             })}
-                                        </div>
+                                        </div> */}
                                     </div>
 
                                     <div className="bg-white/5 border border-white/10 rounded-xl p-4 backdrop-blur-sm">

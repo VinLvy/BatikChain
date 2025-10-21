@@ -1,6 +1,7 @@
 'use client';
 
 import { Product } from '@/config/contract';
+import Image from 'next/image';
 
 interface ProductCardProps {
     product: Product;
@@ -16,9 +17,9 @@ export const ProductCard = ({ product, onViewDetails }: ProductCardProps) => {
             <div className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:border-cyan-400/30">
                 {/* Product Image */}
                 <div className="relative h-56 bg-gradient-to-br from-blue-900/50 to-purple-900/50 overflow-hidden">
-                    {product.imageUrl ? (
-                        <img 
-                            src={product.imageUrl} 
+                    {product.imageHash ? (
+                        <Image 
+                            src={product.imageHash} 
                             alt={product.productName}
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
@@ -94,12 +95,12 @@ export const ProductCard = ({ product, onViewDetails }: ProductCardProps) => {
                     </div>
 
                     {/* Production Date */}
-                    <div className="flex items-center space-x-2 text-sm text-blue-200/70">
+                    {/* <div className="flex items-center space-x-2 text-sm text-blue-200/70">
                         <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
                         </svg>
                         <span>Produced: {new Date(Number(product.productionDate) * 1000).toLocaleDateString('id-ID')}</span>
-                    </div>
+                    </div> */}
 
                     {/* View Details Button */}
                     <button

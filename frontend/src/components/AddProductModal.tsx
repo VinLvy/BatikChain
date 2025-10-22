@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
+import Image from 'next/image';
 
 interface AddProductModalProps {
     isOpen: boolean;
@@ -490,7 +491,7 @@ export const AddProductModal = ({ isOpen, onClose, onSuccess, signer }: AddProdu
                                 {imagePreview && (
                                     <div className="mb-4 relative">
                                         <div className="relative w-full h-48 rounded-xl overflow-hidden border border-white/10">
-                                            <img 
+                                            <Image 
                                                 src={imagePreview} 
                                                 alt="Preview" 
                                                 className="w-full h-full object-cover"

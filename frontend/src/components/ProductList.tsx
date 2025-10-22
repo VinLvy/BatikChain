@@ -5,6 +5,7 @@ import { ethers } from 'ethers';
 import { Product } from '@/config/contract';
 import { ProductCard } from './ProductCard';
 import { ProductDetail } from './ProductDetail';
+import { AddProductModal } from './AddProductModal';
 import { useContract } from '@/hooks/useContract';
 
 interface ProductListProps {
@@ -12,12 +13,14 @@ interface ProductListProps {
     signer: ethers.JsonRpcSigner | null;
 }
 
-export const ProductList = ({ provider }: ProductListProps) => {
+export const ProductList = ({ provider, signer }: ProductListProps) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterVerified, setFilterVerified] = useState<'all' | 'verified' | 'unverified'>('all');
     const [filterTechnique, setFilterTechnique] = useState('all');
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [showSuccessNotification, setShowSuccessNotification] = useState(false);
 
     const { getAllProducts, isLoading, error } = useContract(provider);
 
@@ -44,6 +47,23 @@ export const ProductList = ({ provider }: ProductListProps) => {
 
     const handleCloseDetail = () => {
         setSelectedProduct(null);
+    };
+
+    const handleOpenAddModal = () => {
+        setIsAddModalOpen(true);
+    };
+
+    const handleCloseAddModal = () => {
+        setIsAddModalOpen(false);
+    };
+
+    const handleAddSuccess = () => {
+        // Show success notification
+        setShowSuccessNotification(true);
+        setTimeout(() => setShowSuccessNotification(false), 5000);
+        
+        // Reload products
+        loadProducts();
     };
 
     // Filter products
@@ -104,6 +124,33 @@ export const ProductList = ({ provider }: ProductListProps) => {
 
     return (
         <div className="space-y-6">
+            {/* Success Notification */}
+            {showSuccessNotification && (
+                <div className="fixed top-4 right-4 z-50 animate-slide-down">
+                    <div className="backdrop-blur-xl bg-green-500/20 border border-green-400/30 rounded-xl p-4 shadow-2xl min-w-[300px]">
+                        <div className="flex items-start space-x-3">
+                            <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg className="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                </svg>
+                            </div>
+                            <div className="flex-1">
+                                <h4 className="text-white font-bold mb-1">Product Added Successfully!</h4>
+                                <p className="text-green-200/70 text-sm">Your product has been registered on the blockchain.</p>
+                            </div>
+                            <button
+                                onClick={() => setShowSuccessNotification(false)}
+                                className="text-green-300 hover:text-green-200 transition-colors"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Header Section */}
             <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 shadow-xl">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -115,40 +162,42 @@ export const ProductList = ({ provider }: ProductListProps) => {
                             Showing <span className="text-cyan-400 font-semibold">{filteredProducts.length}</span> of <span className="text-blue-300 font-semibold">{products.length}</span> verified products
                         </p>
                     </div>
-                    <div className='flex gap-2 text-center'>
+                    <div className='flex gap-2'>
                         <button
-                        onClick={loadProducts}
-                        disabled={isLoading}
-                        className="relative group/btn"
-                    >
-                        <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl blur opacity-50 group-hover/btn:opacity-75 transition"></div>
-                        <div className="relative bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 disabled:from-blue-800 disabled:to-cyan-800 text-white px-6 py-3 rounded-xl transition-all font-semibold flex items-center space-x-2">
-                            {isLoading ? (
-                                <>
-                                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
-                                    <span>Syncing...</span>
-                                </>
-                            ) : (
-                                <>
-                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
-                                    </svg>
-                                    <span>Refresh</span>
-                                </>
-                            )}
-                        </div>
-                    </button>
-                    <button
-                        className="relative group/btn"
-                    >
-                        <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-300 to-cyan-300 rounded-xl blur opacity-50 group-hover/btn:opacity-75 transition"></div>
-                        <div className="relative bg-gradient-to-r from-blue-400 to-cyan-400 hover:from-blue-300 hover:to-cyan-300 disabled:from-blue-600 disabled:to-cyan-600 text-white px-6 py-3 rounded-xl transition-all font-semibold flex items-center space-x-2">
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" />
-                            </svg>
-                            <span>Add Product</span>
-                        </div>
-                    </button>
+                            onClick={loadProducts}
+                            disabled={isLoading}
+                            className="relative group/btn"
+                        >
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl blur opacity-50 group-hover/btn:opacity-75 transition"></div>
+                            <div className="relative bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 disabled:from-blue-800 disabled:to-cyan-800 text-white px-6 py-3 rounded-xl transition-all font-semibold flex items-center space-x-2">
+                                {isLoading ? (
+                                    <>
+                                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                                        <span>Syncing...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+                                        </svg>
+                                        <span>Refresh</span>
+                                    </>
+                                )}
+                            </div>
+                        </button>
+                        
+                        <button
+                            onClick={handleOpenAddModal}
+                            className="relative group/btn"
+                        >
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl blur opacity-50 group-hover/btn:opacity-75 transition"></div>
+                            <div className="relative bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-6 py-3 rounded-xl transition-all font-semibold flex items-center space-x-2">
+                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" />
+                                </svg>
+                                <span>Add Product</span>
+                            </div>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -238,7 +287,7 @@ export const ProductList = ({ provider }: ProductListProps) => {
                         <span className="text-sm text-blue-200/60">Active filters:</span>
                         {searchTerm && (
                             <span className="inline-flex items-center space-x-1 px-3 py-1 bg-cyan-500/10 border border-cyan-400/20 rounded-full text-sm text-cyan-300">
-                                <span>Search: "{searchTerm}"</span>
+                                <span>Search: &quot;{searchTerm}&quot;</span>
                                 <button onClick={() => setSearchTerm('')} className="hover:text-cyan-200">
                                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -286,7 +335,7 @@ export const ProductList = ({ provider }: ProductListProps) => {
                             ? 'Try adjusting your filters or search terms to find what you\'re looking for.'
                             : 'No products have been registered in the system yet.'}
                     </p>
-                    {(searchTerm || filterVerified !== 'all' || filterTechnique !== 'all') && (
+                    {(searchTerm || filterVerified !== 'all' || filterTechnique !== 'all') ? (
                         <button
                             onClick={() => {
                                 setSearchTerm('');
@@ -298,6 +347,19 @@ export const ProductList = ({ provider }: ProductListProps) => {
                             <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl blur opacity-50 group-hover/btn:opacity-75 transition"></div>
                             <div className="relative bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white px-6 py-3 rounded-xl font-semibold transition-all">
                                 Clear All Filters
+                            </div>
+                        </button>
+                    ) : (
+                        <button
+                            onClick={handleOpenAddModal}
+                            className="relative group/btn inline-flex"
+                        >
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl blur opacity-50 group-hover/btn:opacity-75 transition"></div>
+                            <div className="relative bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-6 py-3 rounded-xl font-semibold transition-all flex items-center space-x-2">
+                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" />
+                                </svg>
+                                <span>Add First Product</span>
                             </div>
                         </button>
                     )}
@@ -385,6 +447,14 @@ export const ProductList = ({ provider }: ProductListProps) => {
                     onClose={handleCloseDetail}
                 />
             )}
+
+            {/* Add Product Modal */}
+            <AddProductModal
+                isOpen={isAddModalOpen}
+                onClose={handleCloseAddModal}
+                onSuccess={handleAddSuccess}
+                signer={signer}
+            />
         </div>
     );
 };

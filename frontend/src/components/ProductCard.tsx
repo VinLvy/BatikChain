@@ -18,8 +18,9 @@ export const ProductCard = ({ product, onViewDetails }: ProductCardProps) => {
                 {/* Product Image */}
                 <div className="relative h-56 bg-gradient-to-br from-blue-900/50 to-purple-900/50 overflow-hidden">
                     {product.imageHash ? (
-                        <Image 
-                            src={product.imageHash} 
+                        <Image
+                            fill 
+                            src={`https://ipfs.io/ipfs/${product.imageHash}`}
                             alt={product.productName}
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />

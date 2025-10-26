@@ -41,6 +41,13 @@ export const ProductList = ({ provider, signer }: ProductListProps) => {
         }
     }, [provider, loadProducts]);
 
+    // Additional effect to ensure products load when wallet connects
+    useEffect(() => {
+        if (provider && products.length === 0 && !isLoading) {
+            loadProducts();
+        }
+    }, [provider, products.length, isLoading, loadProducts]);
+
     const handleViewDetails = (product: Product) => {
         setSelectedProduct(product);
     };
@@ -61,7 +68,7 @@ export const ProductList = ({ provider, signer }: ProductListProps) => {
         // Show success notification
         setShowSuccessNotification(true);
         setTimeout(() => setShowSuccessNotification(false), 5000);
-        
+
         // Reload products
         loadProducts();
     };
@@ -94,6 +101,22 @@ export const ProductList = ({ provider, signer }: ProductListProps) => {
                     </div>
                     <p className="text-blue-200/70 font-medium">Loading blockchain data...</p>
                     <p className="text-blue-200/50 text-sm mt-2">Fetching products from smart contract</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Show loading state when provider is available but products haven't loaded yet
+    if (provider && products.length === 0 && !error) {
+        return (
+            <div className="flex items-center justify-center min-h-64">
+                <div className="text-center">
+                    <div className="relative inline-block mb-4">
+                        <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-400/20 border-t-blue-400"></div>
+                        <div className="absolute inset-0 animate-ping rounded-full h-16 w-16 border-4 border-blue-400/40"></div>
+                    </div>
+                    <p className="text-blue-200/70 font-medium">Connecting to blockchain...</p>
+                    <p className="text-blue-200/50 text-sm mt-2">Initializing smart contract connection</p>
                 </div>
             </div>
         );
@@ -185,7 +208,7 @@ export const ProductList = ({ provider, signer }: ProductListProps) => {
                                 )}
                             </div>
                         </button>
-                        
+
                         <button
                             onClick={handleOpenAddModal}
                             className="relative group/btn"

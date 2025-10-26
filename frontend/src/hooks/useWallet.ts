@@ -52,11 +52,35 @@ export const useWallet = () => {
       if (accounts.length === 0) {
         disconnectWallet();
       } else {
-        setWalletState((prev) => ({
-          ...prev,
-          account: accounts[0],
-          isConnected: true,
-        }));
+        // Update wallet state and ensure provider/signer are available
+        const updateWalletState = async () => {
+          try {
+            if (!window.ethereum) {
+              throw new Error('MetaMask not available');
+            }
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            const signer = await provider.getSigner();
+            const network = await provider.getNetwork();
+            const chainId = Number(network.chainId);
+
+            setWalletState({
+              account: accounts[0],
+              chainId,
+              isConnected: true,
+              isCorrectNetwork: chainId === CONTRACT_CONFIG.ETHEREUM_SEPOLIA.chainId,
+              provider,
+              signer,
+            });
+          } catch (err) {
+            console.error('Error updating wallet state:', err);
+            setWalletState((prev) => ({
+              ...prev,
+              account: accounts[0],
+              isConnected: true,
+            }));
+          }
+        };
+        updateWalletState();
       }
     };
 

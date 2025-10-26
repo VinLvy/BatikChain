@@ -7,26 +7,28 @@ import { CONTRACT_CONFIG, Product, ProductBasicInfo } from '@/config/contract';
 const CONTRACT_ADDRESS = CONTRACT_CONFIG.CONTRACT_ADDRESS;
 const CONTRACT_ABI = CONTRACT_CONFIG.CONTRACT_ABI;
 
-export const useContract = (provider: ethers.BrowserProvider | null) => { 
+export const useContract = (provider: ethers.BrowserProvider | null) => {
     const [contract, setContract] = useState<ethers.Contract | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         // HANYA provider yang dimasukkan sebagai dependency
-        if (provider && CONTRACT_ADDRESS) { 
+        if (provider && CONTRACT_ADDRESS) {
             const contractInstance = new ethers.Contract(
                 CONTRACT_ADDRESS, // Menggunakan variabel lokal yang stabil
                 CONTRACT_ABI,     // Menggunakan variabel lokal yang stabil
                 provider
             );
             setContract(contractInstance);
+            // Reset error state when contract is initialized
+            setError(null);
         } else {
             setContract(null);
         }
-    // Hapus CONTRACT_ADDRESS dari dependency array
-    // Provider adalah satu-satunya dependency yang diperlukan di sini
-    }, [provider]); 
+        // Hapus CONTRACT_ADDRESS dari dependency array
+        // Provider adalah satu-satunya dependency yang diperlukan di sini
+    }, [provider]);
 
     const getProduct = useCallback(async (id: number): Promise<Product | null> => {
         if (!contract) {
@@ -135,7 +137,7 @@ export const useContract = (provider: ethers.BrowserProvider | null) => {
             for (let i = 0; i < totalCount; i++) {
                 indexPromises.push(contract.getProductIdByIndex(i));
             }
-            
+
             const rawIds = await Promise.all(indexPromises);
             // Gunakan map untuk mengubah BigInt menjadi Number
             return rawIds.map((id: bigint) => Number(id));
@@ -160,11 +162,11 @@ export const useContract = (provider: ethers.BrowserProvider | null) => {
 
         try {
             const productIds = await getAllProductIds();
-            
+
             // Peningkatan Performa: Ambil semua detail produk secara konkuren
             const productPromises = productIds.map(id => getProduct(id));
             const products = await Promise.all(productPromises);
-            
+
             return products.filter((product): product is Product => product !== null);
 
         } catch (err: unknown) { // Perbaikan: Menggunakan unknown
@@ -187,7 +189,7 @@ export const useContract = (provider: ethers.BrowserProvider | null) => {
 
         try {
             const productIds = await getAllProductIds();
-            
+
             // Peningkatan Performa: Ambil semua info dasar secara konkuren
             const infoPromises = productIds.map(id => getProductBasicInfo(id));
             const products = await Promise.all(infoPromises);

@@ -77,15 +77,15 @@ export default function Home() {
           </div>
           
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Verifikasi Keaslian Batik
+            Verify Authenticity of Batik Products
             <span className="block mt-2 bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
-              Berbasis Blockchain
+              Based on Blockchain
             </span>
           </h2>
           
           <p className="text-blue-200/70 text-lg max-w-2xl mx-auto">
-            Platform terdesentralisasi untuk menjamin autentisitas produk batik Indonesia 
-            dengan teknologi Web3 dan Smart Contract
+            Decentralized platform for ensuring the authenticity of batik products in Indonesia 
+            using Web3 and Smart Contract technology
           </p>
         </div>
 
@@ -116,7 +116,7 @@ export default function Home() {
               Connect Your Web3 Wallet
             </h3>
             <p className="text-blue-200/70 mb-6 max-w-md mx-auto">
-              Hubungkan wallet MetaMask Anda dan pastikan menggunakan <span className="text-cyan-400 font-semibold">Ethereum Sepolia Testnet</span> untuk melihat katalog produk batik terverifikasi.
+              Make sure you are connected to <span className="text-cyan-400 font-semibold">Ethereum Sepolia Testnet</span> to view the verified batik product catalog.
             </p>
 
             {/* Features */}
@@ -171,7 +171,7 @@ export default function Home() {
                 <span className="text-xl font-bold text-white">BatikChain</span>
               </div>
               <p className="text-blue-200/70 text-sm leading-relaxed">
-                Menjamin keaslian dan transparansi produk batik Indonesia melalui teknologi blockchain terdesentralisasi.
+                Blockchain-powered authenticity platform for batik products in Indonesia.
               </p>
             </div>
 

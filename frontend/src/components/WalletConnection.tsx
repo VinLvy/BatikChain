@@ -42,7 +42,7 @@ export const WalletConnection = () => {
                         Connect Web3 Wallet
                     </h3>
                     <p className="text-blue-200/70 mb-6 max-w-md mx-auto">
-                        Hubungkan wallet MetaMask Anda untuk mengakses produk batik terverifikasi di blockchain
+                        Connect your MetaMask wallet to access verified batik products on the blockchain.
                     </p>
 
                     {error && (
@@ -96,7 +96,7 @@ export const WalletConnection = () => {
                     </div>
 
                     <p className="text-xs text-blue-200/50 mt-6">
-                        Pastikan Anda menggunakan <span className="text-cyan-400 font-semibold">Ethereum Sepolia Testnet</span>
+                        Make sure you are connected to <span className="text-cyan-400 font-semibold">Ethereum Sepolia Testnet</span>
                     </p>
                 </div>
             </div>
@@ -162,7 +162,7 @@ export const WalletConnection = () => {
 
                     <div className="mt-6 bg-yellow-500/10 border border-yellow-400/20 rounded-xl p-4">
                         <p className="text-xs text-yellow-200/70">
-                            <span className="font-semibold text-yellow-300">Note:</span> Jika network Sepolia belum ada di wallet Anda, sistem akan otomatis menambahkannya.
+                            <span className="font-semibold text-yellow-300">Note:</span> If the Sepolia network is not available in your wallet, the system will automatically add it.
                         </p>
                     </div>
                 </div>

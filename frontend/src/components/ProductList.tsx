@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { ethers } from 'ethers';
 import { Product } from '@/config/contract';
 import { ProductCard } from './ProductCard';
@@ -14,6 +15,7 @@ interface ProductListProps {
 }
 
 export const ProductList = ({ provider, signer }: ProductListProps) => {
+    const router = useRouter();
     const [products, setProducts] = useState<Product[]>([]);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
@@ -210,7 +212,7 @@ export const ProductList = ({ provider, signer }: ProductListProps) => {
                         </button>
 
                         <button
-                            onClick={handleOpenAddModal}
+                            onClick={() => router.push('/add-product')}
                             className="relative group/btn"
                         >
                             <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl blur opacity-50 group-hover/btn:opacity-75 transition"></div>

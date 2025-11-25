@@ -36,7 +36,7 @@ export default function AddProductPage() {
                             </div>
 
                             <div>
-                                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                                <h1 className="text-xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
                                     BatikChain
                                 </h1>
                                 <p className="text-blue-200/80 text-sm mt-0.5">
@@ -52,7 +52,7 @@ export default function AddProductPage() {
                             <svg className="w-5 h-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                             </svg>
-                            <span className="text-white font-medium">Back to Home</span>
+                            <span className="text-white font-medium">Home Page</span>
                         </Link>
                     </div>
                 </div>

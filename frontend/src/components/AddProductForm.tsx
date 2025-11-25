@@ -662,7 +662,7 @@ export const AddProductForm = ({ signer, onSuccess }: AddProductFormProps) => {
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="relative group/btn px-8 py-4"
+                    className="relative group/btn"
                 >
                     <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl blur opacity-50 group-hover/btn:opacity-75 transition"></div>
                     <div className="relative bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 disabled:from-blue-800 disabled:to-cyan-800 text-white px-8 py-4 rounded-xl font-bold transition-all flex items-center justify-center space-x-2">

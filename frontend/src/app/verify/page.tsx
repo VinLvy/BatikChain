@@ -6,6 +6,7 @@ import { ethers } from 'ethers';
 import { VerificationCard } from '@/components/VerificationCard';
 import { useWallet } from '@/hooks/useWallet';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 interface Product {
     id: bigint;
@@ -30,10 +31,25 @@ interface Product {
 
 export default function VerifyPage() {
     const router = useRouter();
+    const { data: session, status } = useSession();
     const { isConnected, isCorrectNetwork, provider, signer } = useWallet();
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (status === 'loading') return;
+
+        if (status === 'unauthenticated') {
+            router.push('/login');
+            return;
+        }
+
+        if (session?.user && (session.user as any).role !== 'admin') {
+            router.push('/login'); // Or a "Not Authorized" page
+            return;
+        }
+    }, [status, session, router]);
 
     const loadUnverifiedProducts = async () => {
         if (!provider) return;
@@ -79,15 +95,27 @@ export default function VerifyPage() {
     };
 
     useEffect(() => {
-        if (isConnected && isCorrectNetwork && provider) {
+        if (isConnected && isCorrectNetwork && provider && status === 'authenticated' && (session?.user as any).role === 'admin') {
             loadUnverifiedProducts();
         }
-    }, [isConnected, isCorrectNetwork, provider]);
+    }, [isConnected, isCorrectNetwork, provider, status, session]);
 
     const handleVerified = () => {
         // Reload products after verification
         loadUnverifiedProducts();
     };
+
+    if (status === 'loading' || (status === 'authenticated' && (session?.user as any).role !== 'admin')) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-slate-900">
+                <div className="animate-spin rounded-full h-16 w-16 border-4 border-cyan-400 border-t-transparent"></div>
+            </div>
+        );
+    }
+
+    if (status === 'unauthenticated') {
+        return null; // Will redirect
+    }
 
     return (
         <main className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 relative overflow-hidden">
@@ -121,15 +149,20 @@ export default function VerifyPage() {
                             </div>
                         </Link>
 
-                        <Link
-                            href="/"
-                            className="flex items-center space-x-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white/30 rounded-lg transition-all"
-                        >
-                            <svg className="w-5 h-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                            </svg>
-                            <span className="text-white font-medium">Back to Home</span>
-                        </Link>
+                        <div className="flex items-center space-x-4">
+                            <div className="text-white text-sm">
+                                Admin: <span className="font-bold text-cyan-400">{session?.user?.name}</span>
+                            </div>
+                            <Link
+                                href="/"
+                                className="flex items-center space-x-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white/30 rounded-lg transition-all"
+                            >
+                                <svg className="w-5 h-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                </svg>
+                                <span className="text-white font-medium">Back to Home</span>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </header>

@@ -1,8 +1,8 @@
 # BatikChain
 
-Platform verifikasi keaslian produk batik Indonesia menggunakan teknologi blockchain Ethereum. Sistem ini memungkinkan pengrajin untuk mendaftarkan produk batik mereka dengan informasi lengkap dan transparan, sementara konsumen dapat memverifikasi keaslian produk melalui blockchain.
+Platform for verifying the authenticity of Indonesian batik products using Ethereum blockchain technology. This system allows artisans to register their batik products with complete and transparent information, while consumers can verify product authenticity through the blockchain.
 
-## 🏗️ Struktur Monorepo
+## 🏗️ Monorepo Structure
 
 ```
 ├── hardhat/           # Smart contract development
@@ -11,11 +11,11 @@ Platform verifikasi keaslian produk batik Indonesia menggunakan teknologi blockc
 │   ├── test/          # Contract tests
 │   └── ...
 ├── frontend/          # Next.js web application
-│   ├── src/          # Source code
-│   ├── components/   # React components
-│   ├── hooks/        # Custom hooks
+│   ├── src/           # Source code
+│   ├── components/    # React components
+│   ├── hooks/         # Custom hooks
 │   └── ...
-└── README.md         # This file
+└── README.md          # This file
 ```
 
 ## 🚀 Quick Start
@@ -34,7 +34,7 @@ Platform verifikasi keaslian produk batik Indonesia menggunakan teknologi blockc
 git clone <repository-url>
 ```
 
-2. Install dependencies untuk semua workspace:
+2. Install dependencies for all workspaces:
 ```bash
 npm run install:all
 ```
@@ -53,7 +53,7 @@ cp frontend/.env.example frontend/.env.local
 npm run deploy:sepolia
 ```
 
-5. Update contract address di `frontend/.env.local` dengan address yang didapat dari deployment.
+5. Update contract address in `frontend/.env.local` with the address obtained from deployment.
 
 6. Start development server:
 ```bash
@@ -64,32 +64,32 @@ npm run dev:frontend
 
 ### Hardhat (`./hardhat/`)
 
-Smart contract development environment untuk BatikAuthenticity.sol.
+Smart contract development environment for BatikAuthenticity.sol.
 
 **Key Features:**
-- ✅ Product registration dengan data lengkap
-- ✅ Verification system untuk keaslian produk
-- ✅ Query functions untuk frontend integration
+- ✅ Product registration with complete data
+- ✅ Verification system for product authenticity
+- ✅ Query functions for frontend integration
 - ✅ OpenZeppelin security standards
 - ✅ ReentrancyGuard protection
 
 **Commands:**
 ```bash
 cd hardhat
-npm run compile     # Compile contracts
-npm run test        # Run tests
+npm run compile         # Compile contracts
+npm run test            # Run tests
 npm run deploy:sepolia  # Deploy to Sepolia testnet
 npm run add-sample:sepolia  # Add sample product
 ```
 
 ### Frontend (`./frontend/`)
 
-Next.js web application untuk interaksi dengan smart contract.
+Next.js web application for interaction with the smart contract.
 
 **Key Features:**
 - 🔗 MetaMask wallet integration
-- 📱 Responsive design dengan Tailwind CSS
-- 🔍 Search dan filter produk
+- 📱 Responsive design with Tailwind CSS
+- 🔍 Product search and filter
 - 📋 Product detail view
 - ✅ Verification status display
 - 🌐 Ethereum Sepolia network support
@@ -107,7 +107,7 @@ npm run lint     # ESLint check
 
 ### Smart Contract
 
-Update `hardhat/.env` dengan:
+Update `hardhat/.env` with:
 ```
 PRIVATE_KEY=your_private_key
 SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_INFURA_API_KEY
@@ -116,7 +116,7 @@ ETHERSCAN_API_KEY=your_etherscan_api_key
 
 ### Frontend
 
-Update `frontend/.env.local` dengan:
+Update `frontend/.env.local` with:
 ```
 NEXT_PUBLIC_CONTRACT_ADDRESS=0x... # Contract address from deployment
 ```
@@ -142,20 +142,20 @@ struct Product {
     string productName;         // Product name
     string artisanName;         // Artisan name
     string artisanAddress;      // Artisan address
-    string village;            // Village name
-    string district;           // District name
-    string regency;            // Regency name
-    string province;           // Province name
-    string coordinates;        // GPS coordinates
-    string technique;          // Batik technique
-    string materials;          // Materials used
-    string description;        // Product description
-    string imageHash;          // Product image hash
-    string artisanImageHash;   // Artisan image hash
-    string videoHash;          // Process video hash
-    uint256 mintDate;          // Minting timestamp
-    bool isVerified;           // Verification status
-    address verifiedBy;        // Verifier address
+    string village;             // Village name
+    string district;            // District name
+    string regency;             // Regency name
+    string province;            // Province name
+    string coordinates;         // GPS coordinates
+    string technique;           // Batik technique
+    string materials;           // Materials used
+    string description;         // Product description
+    string imageHash;           // Product image hash
+    string artisanImageHash;    // Artisan image hash
+    string videoHash;           // Process video hash
+    uint256 mintDate;           // Minting timestamp
+    bool isVerified;            // Verification status
+    address verifiedBy;         // Verifier address
 }
 ```
 
@@ -219,8 +219,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🆘 Support
 
-- Create issue di GitHub repository
-- Check documentation di masing-masing workspace
+- Create an issue in the GitHub repository
+- Check documentation in each workspace
 
 ## 🔗 Links
 

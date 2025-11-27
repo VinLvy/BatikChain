@@ -1,17 +1,17 @@
 # BatikChain Frontend
 
-Frontend aplikasi Next.js untuk platform verifikasi keaslian produk batik Indonesia menggunakan teknologi blockchain.
+Next.js frontend application for the platform verifying the authenticity of Indonesian batik products using blockchain technology.
 
-## Fitur
+## Features
 
-- 🔗 Koneksi ke Polygon Mumbai Testnet
-- 📱 Interface responsif dengan Tailwind CSS
-- 🔍 Pencarian dan filter produk batik
-- 📋 Tampilan detail produk lengkap
-- ✅ Status verifikasi keaslian produk
-- 🔐 Integrasi dengan MetaMask wallet
+- 🔗 Connection to Polygon Mumbai Testnet
+- 📱 Responsive interface with Tailwind CSS
+- 🔍 Batik product search and filter
+- 📋 Complete product detail view
+- ✅ Product authenticity verification status
+- 🔐 Integration with MetaMask wallet
 
-## Teknologi
+## Technology
 
 - **Next.js 15** - React framework
 - **TypeScript** - Type safety
@@ -31,7 +31,7 @@ npm install
 cp .env.example .env.local
 ```
 
-3. Update contract address di `.env.local`:
+3. Update contract address in `.env.local`:
 ```
 NEXT_PUBLIC_CONTRACT_ADDRESS=0x...
 ```
@@ -41,11 +41,11 @@ NEXT_PUBLIC_CONTRACT_ADDRESS=0x...
 npm run dev
 ```
 
-## Konfigurasi Contract
+## Contract Configuration
 
-Pastikan contract address sudah benar di file `.env.local`. Contract address bisa didapatkan setelah deployment smart contract BatikAuthenticity.sol ke Ethereum Sepolia Testnet.
+Ensure the contract address is correct in the `.env.local` file. The contract address can be obtained after deploying the BatikAuthenticity.sol smart contract to the Ethereum Sepolia Testnet.
 
-## Struktur Project
+## Project Structure
 
 ```
 src/
@@ -55,41 +55,41 @@ src/
 │   ├── ProductDetail.tsx
 │   ├── ProductList.tsx
 │   └── WalletConnection.tsx
-├── config/             # Configuration files
+├── config/              # Configuration files
 │   └── contract.ts
-├── hooks/              # Custom React hooks
+├── hooks/               # Custom React hooks
 │   ├── useContract.ts
 │   └── useWallet.ts
-└── types/              # TypeScript type definitions
+└── types/               # TypeScript type definitions
 ```
 
 ## Smart Contract Integration
 
-Aplikasi ini terintegrasi dengan smart contract `BatikAuthenticity.sol` yang menyediakan:
+This application is integrated with the `BatikAuthenticity.sol` smart contract which provides:
 
-- `getProduct(uint256 id)` - Mengambil data produk lengkap
-- `getProductBasicInfo(uint256 id)` - Mengambil informasi dasar produk
-- `getTotalProducts()` - Mengambil jumlah total produk
-- `getAllProductIds()` - Mengambil semua ID produk
-- `isProductVerified(uint256 id)` - Memeriksa status verifikasi
+- `getProduct(uint256 id)` - Retrieve complete product data
+- `getProductBasicInfo(uint256 id)` - Retrieve basic product info
+- `getTotalProducts()` - Retrieve total number of products
+- `getAllProductIds()` - Retrieve all product IDs
+- `isProductVerified(uint256 id)` - Check verification status
 
 ## Deployment
 
-1. Build aplikasi:
+1. Build application:
 ```bash
 npm run build
 ```
 
-2. Deploy ke platform hosting seperti Vercel, Netlify, atau AWS.
+2. Deploy to hosting platforms like Vercel, Netlify, or AWS.
 
 ## Troubleshooting
 
 ### MetaMask Connection Issues
-- Pastikan MetaMask terinstall dan unlocked
-- Pastikan menggunakan Polygon Mumbai Testnet
-- Refresh halaman jika ada masalah koneksi
+- Ensure MetaMask is installed and unlocked
+- Ensure you are using Polygon Mumbai Testnet
+- Refresh the page if there are connection issues
 
 ### Contract Interaction Issues
-- Pastikan contract address benar di `.env.local`
-- Pastikan wallet sudah terhubung ke network yang benar
-- Check browser console untuk error messages
+- Ensure contract address is correct in `.env.local`
+- Ensure wallet is connected to the correct network
+- Check browser console for error messages
